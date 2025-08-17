@@ -1,13 +1,13 @@
 
+import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 import './global.css';
 
 function RootLayoutContent() {
@@ -17,6 +17,13 @@ function RootLayoutContent() {
     // Listen for auth state changes - Supabase handles session persistence automatically
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('Auth state changed:', event, session?.user?.email);
+      if (session) {
+        // Persisted or new session: go to main app
+        router.replace('/(tabs)');
+      } else {
+        // No session: return to auth flow
+        router.replace('/(auth)/sign-in');
+      }
     });
 
     const getInitialUrl = async () => {
@@ -93,6 +100,21 @@ function RootLayoutContent() {
     const linkingSubscription = Linking.addEventListener('url', handleDeepLink);
 
     getInitialUrl();
+
+    // On cold start, immediately route based on existing session
+    (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          router.replace('/(tabs)');
+        } else {
+          // Ensure we land on auth if no session
+          router.replace('/(auth)/sign-in');
+        }
+      } catch (e) {
+        // no-op
+      }
+    })();
 
     return () => {
       linkingSubscription?.remove();

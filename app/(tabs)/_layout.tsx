@@ -91,9 +91,9 @@ export default function TabLayout() {
         name="officer"
         options={{
           href: showCitizenTabs ? null : undefined,
-          title: 'Dashboard',
+          title: 'Officers Home',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'shield' : 'shield-outline'} size={24} color={color} />
+             <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
           ),
         }}
       />

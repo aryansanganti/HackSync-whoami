@@ -1,13 +1,12 @@
-import { supabase } from './supabase';
 
 export type UserRole = 'citizen' | 'officer' | 'volunteer' | 'admin';
 
-export class RoleManager {
+export const RoleManager = {
   /**
    * Detect user role based on email domain or metadata
    * In a production app, this would come from a user_roles table
    */
-  static async detectUserRole(email: string | null): Promise<UserRole> {
+  async detectUserRole(email: string | null): Promise<UserRole> {
     if (!email) return 'citizen';
     
     const emailLower = email.toLowerCase();
@@ -33,12 +32,12 @@ export class RoleManager {
     
     // Default to citizen
     return 'citizen';
-  }
+  },
 
   /**
    * Check if user has permission to perform an action
    */
-  static hasPermission(userRole: UserRole, action: string): boolean {
+  hasPermission(userRole: UserRole, action: string): boolean {
     const permissions: Record<UserRole, string[]> = {
       citizen: [
         'report_issue',
@@ -75,47 +74,48 @@ export class RoleManager {
     };
 
     return permissions[userRole]?.includes(action) || false;
-  }
+  },
 
   /**
    * Get role display name
    */
-  static getRoleDisplayName(role: UserRole): string {
-    const displayNames: Record<UserRole, string> = {
-      citizen: 'Citizen',
-      officer: 'Officer',
-      volunteer: 'Volunteer',
-      admin: 'Administrator'
-    };
-    
-    return displayNames[role] || 'Unknown';
-  }
+  getRoleDisplayName(role: UserRole): string {
+    switch (role) {
+      case 'officer':
+        return 'Officer'; // was "Shield Officer"
+      case 'admin':
+        return 'Admin';
+      case 'citizen':
+      default:
+        return 'Citizen';
+    }
+  },
 
   /**
    * Get role icon name
    */
-  static getRoleIcon(role: UserRole): string {
+  getRoleIcon(role: UserRole): string {
     const icons: Record<UserRole, string> = {
       citizen: 'person',
-      officer: 'shield',
+      officer: 'civic',
       volunteer: 'heart',
       admin: 'settings'
     };
     
     return icons[role] || 'person';
-  }
+  },
 
   /**
    * Check if user can access officer features
    */
-  static canAccessOfficerFeatures(role: UserRole): boolean {
+  canAccessOfficerFeatures(role: UserRole): boolean {
     return ['officer', 'admin'].includes(role);
-  }
+  },
 
   /**
    * Check if user can access admin features
    */
-  static canAccessAdminFeatures(role: UserRole): boolean {
+  canAccessAdminFeatures(role: UserRole): boolean {
     return role === 'admin';
   }
-}
+};

@@ -1,3 +1,5 @@
+import { useTheme } from '@/contexts/ThemeContext';
+import { RoleManager, UserRole } from '@/lib/roleManager';
 import { Session, supabase } from '@/lib/supabase';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -5,8 +7,6 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '@/contexts/ThemeContext';
-import { RoleManager, UserRole } from '@/lib/roleManager';
 
 interface User {
   displayName: string | null;
@@ -37,7 +37,7 @@ export default function ProfileScreen() {
         });
       }
     });
-    
+
     const { data: sub } = supabase.auth.onAuthStateChange(async (_evt, s) => {
       setSession(s);
       if (s?.user) {
@@ -52,7 +52,7 @@ export default function ProfileScreen() {
         setUser(null);
       }
     });
-    
+
     return () => { sub.subscription.unsubscribe(); };
   }, []);
 
@@ -204,7 +204,7 @@ export default function ProfileScreen() {
                 }}>
                   {user.email}
                 </Text>
-                
+
                 {/* Role Badge */}
                 <View style={{
                   backgroundColor: user.role === 'officer' ? (isDark ? '#059669' : '#10b981') : (isDark ? '#3b82f6' : '#3b82f6'),
@@ -348,4 +348,4 @@ export default function ProfileScreen() {
       </ScrollView>
     </SafeAreaView>
   );
-} 
+}
