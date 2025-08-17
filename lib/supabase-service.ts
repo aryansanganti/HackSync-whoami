@@ -1,3 +1,4 @@
+import * as FileSystem from 'expo-file-system';
 import { CivicIssue, IssueCategory, IssueInsert, IssueStatus, IssueUpdate } from '../types';
 import { supabase } from './supabase';
 
@@ -271,24 +272,22 @@ export class SupabaseService {
             try {
                 console.log(`Uploading image attempt ${attempt}/${maxRetries}:`, fileName);
 
-                // Convert image URI to blob with timeout
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-                const response = await fetch(imageUri, {
-                    signal: controller.signal,
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                    }
-                });
-                clearTimeout(timeoutId);
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+                // Convert image URI to Blob using FileSystem (robust across platforms)
+                const info = await FileSystem.getInfoAsync(imageUri);
+                if (!info.exists) {
+                    throw new Error(`Image file not found at URI: ${imageUri}`);
                 }
 
-                const blob = await response.blob();
-                console.log(`Image blob created successfully, size: ${blob.size} bytes`);
+                // Read file as base64, then convert to Blob via data URL (avoids fetch(file://) issues)
+                const base64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+                // Best-effort MIME detection
+                const lower = (imageUri.split('?')[0] || '').toLowerCase();
+                const ext = lower.substring(lower.lastIndexOf('.') + 1);
+                const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : ext === 'heic' ? 'image/heic' : 'image/jpeg';
+                const dataUrl = `data:${mime};base64,${base64}`;
+                const dataResp = await fetch(dataUrl);
+                const blob = await dataResp.blob();
+                console.log(`Image blob created successfully (via data URL), size: ${blob.size} bytes, type: ${blob.type}`);
 
                 // Create file path
                 const filePath = `${issueId}/${fileName}`;

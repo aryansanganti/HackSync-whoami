@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "setup": "node -e \"const fs=require('fs');const p=require('path');const env=p.join(__dirname,'.env');const ex=p.join(__dirname,'config','example.env');if(!fs.existsSync(env)&&fs.existsSync(ex)){fs.copyFileSync(ex,env);console.log('✅ .env file created from example');console.log('⚠️  Please edit .env with your API keys');}else{console.log('✅ .env file already exists')}\"",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -69,6 +70,7 @@
     "@babel/core": "^7.25.2",
     "@types/aes-js": "^3.1.4",
     "@types/react": "~19.0.10",
+    "babel-plugin-module-resolver": "^5.0.2",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "typescript": "~5.8.3"

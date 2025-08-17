@@ -1,5 +1,6 @@
 import { useTheme } from '@/contexts/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
+import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
@@ -151,90 +152,66 @@ export default function ReportScreen() {
     setLoadingMessage('🔍 Converting image for AI analysis...');
 
     try {
-      // Convert image to base64
-      const response = await fetch(imageUri);
-      const blob = await response.blob();
+      // Convert image to base64 using FileSystem (robust vs fetch(file://))
+      const base64Data = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+      if (!base64Data) throw new Error('Failed to read image as base64');
 
-      return new Promise<void>((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = async () => {
-          try {
-            const base64 = reader.result as string;
-            const base64Data = base64.split(',')[1];
-
-            if (!base64Data) {
-              throw new Error('Failed to convert image to base64');
-            }
-
-            setLoadingMessage('🤖 AI is analyzing your civic issue...');
-            console.log('Sending image to Gemini for analysis...');
-            const analysis = await analyzeCivicIssue(base64Data, (message, attempt, maxAttempts) => {
-              setLoadingMessage(message);
-            });
-
-            // Keep loading visible while processing results
-            setLoadingMessage('✨ Processing AI analysis results...');
-
-            if (analysis.confidence > 30) {
-              const mappedCategory = mapAICategory(analysis.category);
-              setCategory(mappedCategory);
-              setDescription(analysis.description);
-              // Map urgency to priority format
-              const urgencyToPriority = {
-                'low': 'Low' as const,
-                'medium': 'Medium' as const,
-                'high': 'High' as const
-              };
-              setPriority(urgencyToPriority[analysis.urgency]);
-              setTitle(`Issue: ${mappedCategory}`);
-              setAiConfidence(analysis.confidence);
-
-              // Show completion message before hiding loader
-              setLoadingMessage('✅ AI analysis complete! Processing results...');
-              
-              // Small delay to show completion message
-              setTimeout(() => {
-                setIsAnalyzing(false);
-                Alert.alert(
-                  'AI Analysis Complete',
-                  `Detected: ${analysis.category} → ${mappedCategory}\nConfidence: ${analysis.confidence}%\n\nAI has automatically filled the form based on the image. You can edit the details if needed.`,
-                  [{ text: 'OK' }]
-                );
-              }, 1000);
-            } else {
-              setAiConfidence(analysis.confidence);
-
-              // Show completion message before hiding loader
-              setLoadingMessage('⚠️ AI analysis complete but confidence is low');
-              
-              // Small delay to show completion message
-              setTimeout(() => {
-                setIsAnalyzing(false);
-                Alert.alert(
-                  'AI Analysis',
-                  `The image doesn't appear to show a clear civic issue (confidence: ${analysis.confidence}%). Please fill in the details manually.`,
-                  [{ text: 'OK' }]
-                );
-              }, 1000);
-            }
-            resolve();
-          } catch (error) {
-            console.error('Error in image analysis:', error);
-            reject(error);
-          }
-        };
-
-        reader.onerror = () => {
-          reject(new Error('Failed to read image file'));
-        };
-
-        reader.readAsDataURL(blob);
+      setLoadingMessage('🤖 AI is analyzing your civic issue...');
+      console.log('Sending image to Gemini for analysis...');
+      const analysis = await analyzeCivicIssue(base64Data, (message, attempt, maxAttempts) => {
+        setLoadingMessage(message);
       });
+
+      // Keep loading visible while processing results
+      setLoadingMessage('✨ Processing AI analysis results...');
+
+      if (analysis.confidence > 30) {
+        const mappedCategory = mapAICategory(analysis.category);
+        setCategory(mappedCategory);
+        setDescription(analysis.description);
+        // Map urgency to priority format
+        const urgencyToPriority = {
+          'low': 'Low' as const,
+          'medium': 'Medium' as const,
+          'high': 'High' as const
+        };
+        setPriority(urgencyToPriority[analysis.urgency]);
+        setTitle(`Issue: ${mappedCategory}`);
+        setAiConfidence(analysis.confidence);
+
+        // Show completion message before hiding loader
+        setLoadingMessage('✅ AI analysis complete! Processing results...');
+
+        // Small delay to show completion message
+        setTimeout(() => {
+          setIsAnalyzing(false);
+          Alert.alert(
+            'AI Analysis Complete',
+            `Detected: ${analysis.category} → ${mappedCategory}\nConfidence: ${analysis.confidence}%\n\nAI has automatically filled the form based on the image. You can edit the details if needed.`,
+            [{ text: 'OK' }]
+          );
+        }, 1000);
+      } else {
+        setAiConfidence(analysis.confidence);
+
+        // Show completion message before hiding loader
+        setLoadingMessage('⚠️ AI analysis complete but confidence is low');
+
+        // Small delay to show completion message
+        setTimeout(() => {
+          setIsAnalyzing(false);
+          Alert.alert(
+            'AI Analysis',
+            `The image doesn't appear to show a clear civic issue (confidence: ${analysis.confidence}%). Please fill in the details manually.`,
+            [{ text: 'OK' }]
+          );
+        }, 1000);
+      }
+      return;
     } catch (error) {
       console.error('Error analyzing image:', error);
       setLoadingMessage('❌ AI analysis failed');
-      
+
       // Small delay to show error message
       setTimeout(() => {
         setIsAnalyzing(false);
@@ -269,7 +246,7 @@ export default function ReportScreen() {
 
       // Show completion message before hiding loader
       setLoadingMessage('✅ AI analysis complete! Processing results...');
-      
+
       // Small delay to show completion message
       setTimeout(() => {
         setIsAnalyzing(false);
@@ -282,7 +259,7 @@ export default function ReportScreen() {
     } catch (error) {
       console.error('Error analyzing text:', error);
       setLoadingMessage('❌ AI analysis failed');
-      
+
       // Small delay to show error message
       setTimeout(() => {
         setIsAnalyzing(false);

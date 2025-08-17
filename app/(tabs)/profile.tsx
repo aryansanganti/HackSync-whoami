@@ -6,11 +6,13 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/contexts/ThemeContext';
+import { RoleManager, UserRole } from '@/lib/roleManager';
 
 interface User {
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
+  role?: UserRole;
 }
 
 export default function ProfileScreen() {
@@ -23,24 +25,38 @@ export default function ProfileScreen() {
   const [isLoading] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user ? {
-        displayName: session.user.user_metadata?.full_name ?? null,
-        email: session.user.email ?? null,
-        photoURL: session.user.user_metadata?.avatar_url ?? null,
-      } : null);
+      if (session?.user) {
+        const userRole = await RoleManager.detectUserRole(session.user.email || null);
+        setUser({
+          displayName: session.user.user_metadata?.full_name ?? null,
+          email: session.user.email ?? null,
+          photoURL: session.user.user_metadata?.avatar_url ?? null,
+          role: userRole,
+        });
+      }
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
+    
+    const { data: sub } = supabase.auth.onAuthStateChange(async (_evt, s) => {
       setSession(s);
-      setUser(s?.user ? {
-        displayName: s.user.user_metadata?.full_name ?? null,
-        email: s.user.email ?? null,
-        photoURL: s.user.user_metadata?.avatar_url ?? null,
-      } : null);
+      if (s?.user) {
+        const userRole = await RoleManager.detectUserRole(s.user.email || null);
+        setUser({
+          displayName: s.user.user_metadata?.full_name ?? null,
+          email: s.user.email ?? null,
+          photoURL: s.user.user_metadata?.avatar_url ?? null,
+          role: userRole,
+        });
+      } else {
+        setUser(null);
+      }
     });
+    
     return () => { sub.subscription.unsubscribe(); };
   }, []);
+
+
 
   const handleSignIn = () => {
     router.push('/(auth)/sign-in');
@@ -184,10 +200,29 @@ export default function ProfileScreen() {
                 <Text style={{
                   fontSize: 14,
                   color: isDark ? '#9ca3af' : '#6b7280',
-                  marginBottom: 16
+                  marginBottom: 8
                 }}>
                   {user.email}
                 </Text>
+                
+                {/* Role Badge */}
+                <View style={{
+                  backgroundColor: user.role === 'officer' ? (isDark ? '#059669' : '#10b981') : (isDark ? '#3b82f6' : '#3b82f6'),
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                  borderRadius: 16,
+                  marginBottom: 16,
+                }}>
+                  <Text style={{
+                    color: '#ffffff',
+                    fontSize: 12,
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                  }}>
+                    {user.role ? `${RoleManager.getRoleIcon(user.role)} ${RoleManager.getRoleDisplayName(user.role)}` : '👤 Citizen'}
+                  </Text>
+                </View>
+
                 <View style={{ flexDirection: 'row', gap: 12 }}>
                   <TouchableOpacity
                     onPress={handleSignOut}

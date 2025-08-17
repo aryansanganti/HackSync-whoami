@@ -1,0 +1,66 @@
+app-example/app/(tabs)/_layout.tsx(5,27): error TS2307: Cannot find module '@/components/HapticTab' or its corresponding type declarations.
+app-example/app/(tabs)/_layout.tsx(6,28): error TS2307: Cannot find module '@/components/ui/IconSymbol' or its corresponding type declarations.
+app-example/app/(tabs)/_layout.tsx(7,30): error TS2307: Cannot find module '@/components/ui/TabBarBackground' or its corresponding type declarations.
+app-example/app/(tabs)/_layout.tsx(8,24): error TS2307: Cannot find module '@/constants/Colors' or its corresponding type declarations.
+app-example/app/(tabs)/_layout.tsx(9,32): error TS2307: Cannot find module '@/hooks/useColorScheme' or its corresponding type declarations.
+app-example/app/(tabs)/explore.tsx(4,29): error TS2307: Cannot find module '@/components/Collapsible' or its corresponding type declarations.
+app-example/app/(tabs)/explore.tsx(5,30): error TS2307: Cannot find module '@/components/ExternalLink' or its corresponding type declarations.
+app-example/app/(tabs)/explore.tsx(6,32): error TS2307: Cannot find module '@/components/ParallaxScrollView' or its corresponding type declarations.
+app-example/app/(tabs)/explore.tsx(7,28): error TS2307: Cannot find module '@/components/ThemedText' or its corresponding type declarations.
+app-example/app/(tabs)/explore.tsx(8,28): error TS2307: Cannot find module '@/components/ThemedView' or its corresponding type declarations.
+app-example/app/(tabs)/explore.tsx(9,28): error TS2307: Cannot find module '@/components/ui/IconSymbol' or its corresponding type declarations.
+app-example/app/(tabs)/index.tsx(4,27): error TS2307: Cannot find module '@/components/HelloWave' or its corresponding type declarations.
+app-example/app/(tabs)/index.tsx(5,32): error TS2307: Cannot find module '@/components/ParallaxScrollView' or its corresponding type declarations.
+app-example/app/(tabs)/index.tsx(6,28): error TS2307: Cannot find module '@/components/ThemedText' or its corresponding type declarations.
+app-example/app/(tabs)/index.tsx(7,28): error TS2307: Cannot find module '@/components/ThemedView' or its corresponding type declarations.
+app-example/app/+not-found.tsx(4,28): error TS2307: Cannot find module '@/components/ThemedText' or its corresponding type declarations.
+app-example/app/+not-found.tsx(5,28): error TS2307: Cannot find module '@/components/ThemedView' or its corresponding type declarations.
+app-example/app/_layout.tsx(7,32): error TS2307: Cannot find module '@/hooks/useColorScheme' or its corresponding type declarations.
+app-example/components/Collapsible.tsx(4,28): error TS2307: Cannot find module '@/components/ThemedText' or its corresponding type declarations.
+app-example/components/Collapsible.tsx(5,28): error TS2307: Cannot find module '@/components/ThemedView' or its corresponding type declarations.
+app-example/components/Collapsible.tsx(6,28): error TS2307: Cannot find module '@/components/ui/IconSymbol' or its corresponding type declarations.
+app-example/components/Collapsible.tsx(7,24): error TS2307: Cannot find module '@/constants/Colors' or its corresponding type declarations.
+app-example/components/Collapsible.tsx(8,32): error TS2307: Cannot find module '@/hooks/useColorScheme' or its corresponding type declarations.
+app-example/components/HelloWave.tsx(11,28): error TS2307: Cannot find module '@/components/ThemedText' or its corresponding type declarations.
+app-example/components/ParallaxScrollView.tsx(10,28): error TS2307: Cannot find module '@/components/ThemedView' or its corresponding type declarations.
+app-example/components/ParallaxScrollView.tsx(11,38): error TS2307: Cannot find module '@/components/ui/TabBarBackground' or its corresponding type declarations.
+app-example/components/ParallaxScrollView.tsx(12,32): error TS2307: Cannot find module '@/hooks/useColorScheme' or its corresponding type declarations.
+app-example/components/ParallaxScrollView.tsx(57,32): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ dark: string; light: string; }'.
+app-example/components/ThemedText.tsx(3,31): error TS2307: Cannot find module '@/hooks/useThemeColor' or its corresponding type declarations.
+app-example/components/ThemedView.tsx(3,31): error TS2307: Cannot find module '@/hooks/useThemeColor' or its corresponding type declarations.
+app-example/hooks/useThemeColor.ts(6,24): error TS2307: Cannot find module '@/constants/Colors' or its corresponding type declarations.
+app-example/hooks/useThemeColor.ts(7,32): error TS2307: Cannot find module '@/hooks/useColorScheme' or its corresponding type declarations.
+app-example/hooks/useThemeColor.ts(14,26): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ light?: string | undefined; dark?: string | undefined; }'.
+app/(tabs)/map.tsx(242,23): error TS2322: Type 'string' is not assignable to type '"location" | "images" | "person" | "shield" | "heart" | "settings" | "push" | "map" | "filter" | "at" | "star" | "text" | "time" | "search" | "repeat" | "link" | "body" | "code" | ... 1320 more ... | undefined'.
+app/(tabs)/map.tsx(296,13): error TS2322: Type '(priority: Priority) => string' is not assignable to type '(priority: string) => string'.
+  Types of parameters 'priority' and 'priority' are incompatible.
+    Type 'string' is not assignable to type 'Priority'.
+app/(tabs)/map.tsx(297,13): error TS2322: Type '(status: IssueStatus, isDark: boolean) => string' is not assignable to type '(status: IssueStatus) => string'.
+  Target signature provides too few arguments. Expected 2 or more, but got 1.
+app/issue/[id].tsx(21,7): error TS2322: Type '"Roads & Infrastructure"' is not assignable to type 'IssueCategory'.
+app/issue/[id].tsx(23,7): error TS2820: Type '"in-progress"' is not assignable to type 'IssueStatus'. Did you mean '"In Progress"'?
+app/issue/[id].tsx(39,11): error TS2561: Object literal may only specify known properties, but 'author' does not exist in type 'Comment'. Did you mean to write 'authorId'?
+app/issue/[id].tsx(53,12): error TS2678: Type '"open"' is not comparable to type 'IssueStatus'.
+app/issue/[id].tsx(55,12): error TS2678: Type '"in-progress"' is not comparable to type 'IssueStatus'.
+app/issue/[id].tsx(57,12): error TS2678: Type '"resolved"' is not comparable to type 'IssueStatus'.
+app/issue/[id].tsx(59,12): error TS2678: Type '"closed"' is not comparable to type 'IssueStatus'.
+app/issue/[id].tsx(68,12): error TS2678: Type '"open"' is not comparable to type 'IssueStatus'.
+app/issue/[id].tsx(70,12): error TS2678: Type '"in-progress"' is not comparable to type 'IssueStatus'.
+app/issue/[id].tsx(72,12): error TS2678: Type '"resolved"' is not comparable to type 'IssueStatus'.
+app/issue/[id].tsx(74,12): error TS2678: Type '"closed"' is not comparable to type 'IssueStatus'.
+app/issue/[id].tsx(116,18): error TS2339: Property 'images' does not exist on type 'CivicIssue'.
+app/issue/[id].tsx(116,34): error TS2339: Property 'images' does not exist on type 'CivicIssue'.
+app/issue/[id].tsx(119,38): error TS2339: Property 'images' does not exist on type 'CivicIssue'.
+app/issue/[id].tsx(159,16): error TS18048: 'issue.tags' is possibly 'undefined'.
+app/issue/[id].tsx(177,26): error TS2339: Property 'location' does not exist on type 'CivicIssue'.
+app/issue/[id].tsx(183,26): error TS2339: Property 'reportedAt' does not exist on type 'CivicIssue'.
+app/issue/[id].tsx(210,26): error TS2339: Property 'downvotes' does not exist on type 'CivicIssue'.
+app/issue/[id].tsx(218,20): error TS18048: 'issue.comments' is possibly 'undefined'.
+app/issue/[id].tsx(234,26): error TS18048: 'issue.comments' is possibly 'undefined'.
+app/issue/[id].tsx(236,14): error TS18048: 'issue.comments' is possibly 'undefined'.
+lib/database.ts(62,17): error TS2353: Object literal may only specify known properties, and 'urgency' does not exist in type 'CivicIssue'.
+lib/database.ts(127,17): error TS2367: This comparison appears to be unintentional because the types 'IssueStatus' and '"assigned"' have no overlap.
+lib/database.ts(128,17): error TS2367: This comparison appears to be unintentional because the types 'IssueStatus' and '"in_progress"' have no overlap.
+lib/database.ts(129,17): error TS2367: This comparison appears to be unintentional because the types 'IssueStatus' and '"resolved"' have no overlap.
+lib/database.ts(148,35): error TS2551: Property 'updatedAt' does not exist on type 'CivicIssue'. Did you mean 'updated_at'?
+lib/database.ts(150,17): error TS2367: This comparison appears to be unintentional because the types 'IssueStatus' and '"resolved"' have no overlap.

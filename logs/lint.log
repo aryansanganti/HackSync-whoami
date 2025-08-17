@@ -1,0 +1,52 @@
+
+> civic-ai@1.0.0 lint
+> expo lint
+
+env: load .env
+env: export EXPO_PUBLIC_GEMINI_API_KEY EXPO_PUBLIC_SUPABASE_URL EXPO_PUBLIC_SUPABASE_KEY
+yarn run v1.22.22
+warning ../package.json: No license field
+$ /Users/aryansanganti/KJSCE/Civic-AI/node_modules/.bin/eslint /Users/aryansanganti/KJSCE/Civic-AI/app /Users/aryansanganti/KJSCE/Civic-AI/components --fix=false --cache=true --cache-location=/Users/aryansanganti/KJSCE/Civic-AI/.expo/cache/eslint/
+
+/Users/aryansanganti/KJSCE/Civic-AI/app/(auth)/sign-in.tsx
+  15:34  warning  'theme' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/aryansanganti/KJSCE/Civic-AI/app/(tabs)/map.tsx
+   12:8   warning  Using exported name 'SupabaseService' as identifier for default import                                                      import/no-named-as-default
+   70:12  warning  'locationError' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+  104:6   warning  React Hook useEffect has a missing dependency: 'loadIssues'. Either include it or remove the dependency array               react-hooks/exhaustive-deps
+  133:9   warning  'handleMapError' is assigned a value but never used                                                                         @typescript-eslint/no-unused-vars
+  188:23  error    React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+/Users/aryansanganti/KJSCE/Civic-AI/app/(tabs)/officer.tsx
+  16:8   warning  Using exported name 'SupabaseService' as identifier for default import                                                 import/no-named-as-default
+  31:19  warning  'setFilters' is assigned a value but never used                                                                        @typescript-eslint/no-unused-vars
+  49:6   warning  React Hook useEffect has a missing dependency: 'loadIssues'. Either include it or remove the dependency array          react-hooks/exhaustive-deps
+  99:6   warning  React Hook React.useCallback has a missing dependency: 'loadIssues'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/aryansanganti/KJSCE/Civic-AI/app/(tabs)/profile.tsx
+  23:10  warning  'session' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/aryansanganti/KJSCE/Civic-AI/app/auth-callback/index.tsx
+   5:29  warning  'Alert' is defined but never used                                                                                      @typescript-eslint/no-unused-vars
+  12:9   warning  'params' is assigned a value but never used                                                                            @typescript-eslint/no-unused-vars
+  18:6   warning  React Hook useEffect has a missing dependency: 'handleAuthCallback'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/aryansanganti/KJSCE/Civic-AI/app/report.tsx
+   22:8   warning  Using exported name 'SupabaseService' as identifier for default import  import/no-named-as-default
+  541:90  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`         react/no-unescaped-entities
+
+/Users/aryansanganti/KJSCE/Civic-AI/components/AILoadingModal.tsx
+   22:16  warning  'height' is assigned a value but never used                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  143:8   warning  React Hook useEffect has missing dependencies: 'dotAnimation1', 'dotAnimation2', 'dotAnimation3', 'opacityValue', 'pulseValue', 'scaleValue', and 'spinValue'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/aryansanganti/KJSCE/Civic-AI/components/Account.tsx
+  12:8  warning  React Hook useEffect has a missing dependency: 'getProfile'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/aryansanganti/KJSCE/Civic-AI/components/MyIssues.tsx
+  3:8  warning  Using exported name 'SupabaseService' as identifier for default import  import/no-named-as-default
+
+✖ 20 problems (2 errors, 18 warnings)
+
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

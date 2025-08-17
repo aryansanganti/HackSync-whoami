@@ -1,6 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useColorScheme as useNativeWindColorScheme } from 'nativewind';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -23,6 +24,7 @@ export const useTheme = () => {
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const systemColorScheme = useColorScheme();
+  const { setColorScheme } = useNativeWindColorScheme();
   const [theme, setThemeState] = useState<Theme>('system');
   const [isDark, setIsDark] = useState(false);
 
@@ -31,10 +33,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   useEffect(() => {
-    const newIsDark = theme === 'system' 
+    const newIsDark = theme === 'system'
       ? systemColorScheme === 'dark'
       : theme === 'dark';
     setIsDark(newIsDark);
+    // Sync NativeWind so `dark:` classes react to our theme toggle
+    try {
+      setColorScheme?.(newIsDark ? 'dark' : 'light');
+    } catch { }
   }, [theme, systemColorScheme]);
 
   const loadThemePreference = async () => {
