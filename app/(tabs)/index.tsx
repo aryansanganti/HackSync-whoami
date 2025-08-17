@@ -2,30 +2,53 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { RoleManager, UserRole } from '@/lib/roleManager';
 import { supabase } from '@/lib/supabase';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import SupabaseService from '../../lib/supabase-service';
 
 export default function HomeScreen() {
   const { isDark } = useTheme();
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [quickStats, setQuickStats] = useState<{ total: number; byStatus: Record<string, number> }>({
+    total: 0,
+    byStatus: { 'Pending': 0, 'In Progress': 0, 'Resolved': 0 },
+  });
 
   useEffect(() => {
     checkUserRole();
-    
+    loadQuickStats();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
       if (session?.user) {
         checkUserRole();
+        loadQuickStats();
       } else {
         setUserRole(null);
+        loadQuickStats();
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Refresh stats when screen gains focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadQuickStats();
+      // Subscribe to realtime changes and refresh stats
+      const sub = SupabaseService.subscribeToIssues(() => {
+        loadQuickStats();
+      });
+      return () => {
+        try { sub.unsubscribe(); } catch { }
+      };
+    }, [])
+  );
 
   const checkUserRole = async () => {
     try {
@@ -42,24 +65,33 @@ export default function HomeScreen() {
 
   const isOfficer = isAuthenticated && RoleManager.canAccessOfficerFeatures(userRole || 'citizen');
 
+  const loadQuickStats = async () => {
+    try {
+      const stats = await SupabaseService.getIssueStats();
+      setQuickStats({ total: stats.total, byStatus: stats.byStatus as any });
+    } catch (e) {
+      // keep previous
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#111827' : '#f9fafb' }}>
       <ScrollView style={{ flex: 1 }}>
         <View style={{ padding: 20 }}>
-          <Text style={{ 
-            fontSize: 28, 
-            fontWeight: 'bold', 
+          <Text style={{
+            fontSize: 28,
+            fontWeight: 'bold',
             color: isDark ? '#ffffff' : '#111827',
-            marginBottom: 8 
+            marginBottom: 8
           }}>
             {isOfficer ? 'Officer Dashboard' : 'Civic AI'}
           </Text>
-          <Text style={{ 
-            fontSize: 16, 
+          <Text style={{
+            fontSize: 16,
             color: isDark ? '#9ca3af' : '#6b7280',
-            marginBottom: 20 
+            marginBottom: 20
           }}>
-            {isOfficer 
+            {isOfficer
               ? 'Manage civic issues and track progress'
               : 'Report and track civic issues in your area'
             }
@@ -162,7 +194,7 @@ export default function HomeScreen() {
           )}
 
           {/* Quick Stats */}
-          <View style={{ 
+          <View style={{
             backgroundColor: isDark ? '#1f2937' : '#ffffff',
             borderRadius: 12,
             padding: 20,
@@ -173,15 +205,15 @@ export default function HomeScreen() {
             </Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={{ alignItems: 'center', flex: 1 }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#60a5fa' : '#3b82f6' }}>0</Text>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#60a5fa' : '#3b82f6' }}>{quickStats.total}</Text>
                 <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>Total Issues</Text>
               </View>
               <View style={{ alignItems: 'center', flex: 1 }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#10b981' : '#059669' }}>0</Text>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#10b981' : '#059669' }}>{quickStats.byStatus['Resolved'] || 0}</Text>
                 <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>Resolved</Text>
               </View>
               <View style={{ alignItems: 'center', flex: 1 }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#f59e0b' : '#d97706' }}>0</Text>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#f59e0b' : '#d97706' }}>{quickStats.byStatus['Pending'] || 0}</Text>
                 <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>Pending</Text>
               </View>
             </View>
