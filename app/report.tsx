@@ -1,3 +1,4 @@
+import { useTheme } from '@/contexts/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
@@ -11,7 +12,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,7 +23,7 @@ import SupabaseService from '../lib/supabase-service';
 import { IssueCategory } from '../types';
 
 export default function ReportScreen() {
-  const colorScheme = useColorScheme();
+  const { isDark } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('AI is analyzing...');
@@ -39,8 +39,6 @@ export default function ReportScreen() {
   } | null>(null);
   const [aiConfidence, setAiConfidence] = useState<number | null>(null);
   const [isAnonymous, setIsAnonymous] = useState(false);
-
-  const isDark = colorScheme === 'dark';
 
   useEffect(() => {
     getCurrentLocation();
@@ -150,7 +148,6 @@ export default function ReportScreen() {
   };
 
   const analyzeImage = async (imageUri: string) => {
-    // Loading is already started by the calling function
     setLoadingMessage('🔍 Converting image for AI analysis...');
 
     try {
@@ -193,25 +190,33 @@ export default function ReportScreen() {
               setTitle(`Issue: ${mappedCategory}`);
               setAiConfidence(analysis.confidence);
 
-              // Hide loading before showing alert
-              setIsAnalyzing(false);
-
-              Alert.alert(
-                'AI Analysis Complete',
-                `Detected: ${analysis.category} → ${mappedCategory}\nConfidence: ${analysis.confidence}%\n\nAI has automatically filled the form based on the image. You can edit the details if needed.`,
-                [{ text: 'OK' }]
-              );
+              // Show completion message before hiding loader
+              setLoadingMessage('✅ AI analysis complete! Processing results...');
+              
+              // Small delay to show completion message
+              setTimeout(() => {
+                setIsAnalyzing(false);
+                Alert.alert(
+                  'AI Analysis Complete',
+                  `Detected: ${analysis.category} → ${mappedCategory}\nConfidence: ${analysis.confidence}%\n\nAI has automatically filled the form based on the image. You can edit the details if needed.`,
+                  [{ text: 'OK' }]
+                );
+              }, 1000);
             } else {
               setAiConfidence(analysis.confidence);
 
-              // Hide loading before showing alert
-              setIsAnalyzing(false);
-
-              Alert.alert(
-                'AI Analysis',
-                `The image doesn't appear to show a clear civic issue (confidence: ${analysis.confidence}%). Please fill in the details manually.`,
-                [{ text: 'OK' }]
-              );
+              // Show completion message before hiding loader
+              setLoadingMessage('⚠️ AI analysis complete but confidence is low');
+              
+              // Small delay to show completion message
+              setTimeout(() => {
+                setIsAnalyzing(false);
+                Alert.alert(
+                  'AI Analysis',
+                  `The image doesn't appear to show a clear civic issue (confidence: ${analysis.confidence}%). Please fill in the details manually.`,
+                  [{ text: 'OK' }]
+                );
+              }, 1000);
             }
             resolve();
           } catch (error) {
@@ -228,12 +233,16 @@ export default function ReportScreen() {
       });
     } catch (error) {
       console.error('Error analyzing image:', error);
-      Alert.alert(
-        'Analysis Error',
-        'Failed to analyze image with AI. Please fill in the details manually.'
-      );
-    } finally {
-      setIsAnalyzing(false);
+      setLoadingMessage('❌ AI analysis failed');
+      
+      // Small delay to show error message
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        Alert.alert(
+          'Analysis Error',
+          'Failed to analyze image with AI. Please fill in the details manually.'
+        );
+      }, 1000);
     }
   };
 
@@ -258,19 +267,27 @@ export default function ReportScreen() {
       setPriority(urgencyToPriority[analysis.urgency]);
       setTitle(`Issue: ${mappedCategory}`);
 
-      // Hide loading before showing alert
-      setIsAnalyzing(false);
-
-      Alert.alert(
-        'AI Analysis Complete',
-        `Based on your description, AI suggests:\nCategory: ${analysis.category} → ${mappedCategory}\nUrgency: ${analysis.urgency}\n\nAI has updated the form. You can edit if needed.`,
-        [{ text: 'OK' }]
-      );
+      // Show completion message before hiding loader
+      setLoadingMessage('✅ AI analysis complete! Processing results...');
+      
+      // Small delay to show completion message
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        Alert.alert(
+          'AI Analysis Complete',
+          `Based on your description, AI suggests:\nCategory: ${analysis.category} → ${mappedCategory}\nUrgency: ${analysis.urgency}\n\nAI has updated the form. You can edit if needed.`,
+          [{ text: 'OK' }]
+        );
+      }, 1000);
     } catch (error) {
       console.error('Error analyzing text:', error);
-      Alert.alert('Error', 'Failed to analyze text with AI');
-    } finally {
-      setIsAnalyzing(false);
+      setLoadingMessage('❌ AI analysis failed');
+      
+      // Small delay to show error message
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        Alert.alert('Error', 'Failed to analyze text with AI');
+      }, 1000);
     }
   };
 

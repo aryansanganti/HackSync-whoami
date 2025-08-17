@@ -3,8 +3,9 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, ScrollView, Switch, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { Alert, Image, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface User {
   displayName: string | null;
@@ -13,16 +14,13 @@ interface User {
 }
 
 export default function ProfileScreen() {
-  const colorScheme = useColorScheme();
+  const { isDark, toggleTheme } = useTheme();
   const router = useRouter();
-  const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'dark');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [locationEnabled, setLocationEnabled] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading] = useState(false);
-
-  const isDark = colorScheme === 'dark';
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -82,9 +80,9 @@ export default function ProfileScreen() {
     {
       title: 'Dark Mode',
       icon: 'moon-outline',
-      onPress: () => setIsDarkMode(!isDarkMode),
+      onPress: toggleTheme,
       showSwitch: true,
-      switchValue: isDarkMode,
+      switchValue: isDark,
     },
     {
       title: 'Language',

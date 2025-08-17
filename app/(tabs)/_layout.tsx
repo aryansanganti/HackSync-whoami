@@ -1,23 +1,41 @@
 import { Tabs } from 'expo-router';
-import { useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { isDark, toggleTheme } = useTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colorScheme === 'dark' ? '#60a5fa' : '#3b82f6',
-        tabBarInactiveTintColor: colorScheme === 'dark' ? '#6b7280' : '#9ca3af',
+        tabBarActiveTintColor: isDark ? '#60a5fa' : '#3b82f6',
+        tabBarInactiveTintColor: isDark ? '#6b7280' : '#9ca3af',
         tabBarStyle: {
-          backgroundColor: colorScheme === 'dark' ? '#1f2937' : '#ffffff',
-          borderTopColor: colorScheme === 'dark' ? '#374151' : '#e5e7eb',
+          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+          borderTopColor: isDark ? '#374151' : '#e5e7eb',
         },
         headerStyle: {
-          backgroundColor: colorScheme === 'dark' ? '#1f2937' : '#ffffff',
+          backgroundColor: isDark ? '#1f2937' : '#ffffff',
         },
-        headerTintColor: colorScheme === 'dark' ? '#ffffff' : '#000000',
+        headerTintColor: isDark ? '#ffffff' : '#000000',
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={toggleTheme}
+            style={{
+              marginRight: 16,
+              padding: 8,
+              borderRadius: 20,
+              backgroundColor: isDark ? '#374151' : '#f3f4f6',
+            }}
+          >
+            <Ionicons
+              name={isDark ? 'sunny' : 'moon'}
+              size={20}
+              color={isDark ? '#fbbf24' : '#6b7280'}
+            />
+          </TouchableOpacity>
+        ),
       }}>
       <Tabs.Screen
         name="index"

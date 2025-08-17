@@ -1,0 +1,24 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createClient } from '@supabase/supabase-js';
+import 'react-native-get-random-values';
+
+// Pull from Expo public env
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_KEY!;
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.warn('Supabase env not set: EXPO_PUBLIC_SUPABASE_URL/EXPO_PUBLIC_SUPABASE_KEY');
+}
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+        flowType: 'pkce',            // ✅ mobile-friendly, avoids big URL tokens
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: false,   // ✅ RN: no window.location
+        storage: AsyncStorage,       // ✅ avoids SecureStore 2KB limit
+        storageKey: 'sb-civicai-auth'
+    }
+});
+
+export type { Session } from '@supabase/supabase-js';

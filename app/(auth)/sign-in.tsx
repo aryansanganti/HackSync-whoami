@@ -1,15 +1,18 @@
+import { useTheme } from '@/contexts/ThemeContext';
 import { supabase } from '@/lib/supabase';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { makeRedirectUri } from 'expo-auth-session';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import React, { useEffect, useState } from 'react';
-import { Alert, AppState, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, AppState, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function SignIn() {
     const router = useRouter();
+    const { isDark, toggleTheme, theme } = useTheme();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -169,47 +172,236 @@ export default function SignIn() {
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', padding: 24, gap: 12 }}>
-            <Text style={{ fontSize: 28, fontWeight: '700', marginBottom: 8 }}>Welcome</Text>
-            <Text style={{ color: '#6b7280', marginBottom: 16 }}>Sign in to continue</Text>
-
-            <Text>Email</Text>
-            <TextInput
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                placeholder="you@example.com"
-                style={{ borderWidth: 1, borderColor: '#d1d5db', borderRadius: 10, padding: 12 }}
-            />
-
-            <Text>Password</Text>
-            <TextInput
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                placeholder="••••••••"
-                style={{ borderWidth: 1, borderColor: '#d1d5db', borderRadius: 10, padding: 12 }}
-            />
-
-            <TouchableOpacity onPress={signInWithEmail} disabled={loading} style={{ backgroundColor: '#2563eb', padding: 14, borderRadius: 12, alignItems: 'center', marginTop: 8 }}>
-                <Text style={{ color: 'white', fontWeight: '600' }}>{loading ? 'Signing in…' : 'Sign In'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={signUpWithEmail} disabled={loading} style={{ backgroundColor: '#111827', padding: 14, borderRadius: 12, alignItems: 'center' }}>
-                <Text style={{ color: 'white', fontWeight: '600' }}>{loading ? 'Please wait…' : 'Sign Up'}</Text>
+        <View style={[styles.container, { backgroundColor: isDark ? '#111827' : '#f9fafb' }]}>
+            {/* Theme Toggle Button */}
+            <TouchableOpacity 
+                style={[styles.themeToggle, { backgroundColor: isDark ? '#374151' : '#ffffff' }]}
+                onPress={toggleTheme}
+            >
+                <Ionicons 
+                    name={isDark ? 'sunny' : 'moon'} 
+                    size={24} 
+                    color={isDark ? '#fbbf24' : '#6b7280'} 
+                />
             </TouchableOpacity>
 
-            <View style={{ height: 1, backgroundColor: '#e5e7eb', marginVertical: 12 }} />
+            <View style={styles.content}>
+                <Text style={[styles.title, { color: isDark ? '#ffffff' : '#111827' }]}>
+                    Welcome to Civic-AI
+                </Text>
+                <Text style={[styles.subtitle, { color: isDark ? '#9ca3af' : '#6b7280' }]}>
+                    Report civic issues and track their resolution
+                </Text>
 
-            <TouchableOpacity onPress={signInWithGoogle} disabled={loading} style={{ backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#d1d5db', padding: 14, borderRadius: 12, alignItems: 'center' }}>
-                <Text style={{ color: '#111827', fontWeight: '600' }}>Sign in with Google</Text>
-            </TouchableOpacity>
+                <View style={styles.formSection}>
+                    <Text style={[styles.label, { color: isDark ? '#d1d5db' : '#374151' }]}>Email</Text>
+                    <TextInput
+                        value={email}
+                        onChangeText={setEmail}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        placeholder="you@example.com"
+                        placeholderTextColor={isDark ? '#6b7280' : '#9ca3af'}
+                        style={[styles.input, { 
+                            backgroundColor: isDark ? '#1f2937' : '#ffffff',
+                            borderColor: isDark ? '#374151' : '#d1d5db',
+                            color: isDark ? '#ffffff' : '#111827'
+                        }]}
+                    />
 
-            <TouchableOpacity onPress={continueAsGuest} style={{ padding: 14, borderRadius: 12, alignItems: 'center' }}>
-                <Text style={{ color: '#6b7280', fontWeight: '600' }}>Continue as guest</Text>
-            </TouchableOpacity>
+                    <Text style={[styles.label, { color: isDark ? '#d1d5db' : '#374151' }]}>Password</Text>
+                    <TextInput
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        placeholder="••••••••"
+                        placeholderTextColor={isDark ? '#6b7280' : '#9ca3af'}
+                        style={[styles.input, { 
+                            backgroundColor: isDark ? '#1f2937' : '#ffffff',
+                            borderColor: isDark ? '#374151' : '#d1d5db',
+                            color: isDark ? '#ffffff' : '#111827'
+                        }]}
+                    />
+
+                    <TouchableOpacity 
+                        onPress={signInWithEmail} 
+                        disabled={loading} 
+                        style={[styles.primaryButton, { opacity: loading ? 0.7 : 1 }]}
+                    >
+                        <Text style={styles.primaryButtonText}>
+                            {loading ? 'Signing in…' : 'Sign In'}
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        onPress={signUpWithEmail} 
+                        disabled={loading} 
+                        style={[styles.secondaryButton, { 
+                            backgroundColor: isDark ? '#374151' : '#f3f4f6',
+                            borderColor: isDark ? '#4b5563' : '#d1d5db'
+                        }]}
+                    >
+                        <Text style={[styles.secondaryButtonText, { color: isDark ? '#d1d5db' : '#374151' }]}>
+                            {loading ? 'Please wait…' : 'Sign Up'}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#e5e7eb' }]} />
+
+                <View style={styles.socialSection}>
+                    <TouchableOpacity 
+                        onPress={signInWithGoogle} 
+                        disabled={loading} 
+                        style={[styles.googleButton, { 
+                            backgroundColor: isDark ? '#1f2937' : '#ffffff',
+                            borderColor: isDark ? '#374151' : '#d1d5db'
+                        }]}
+                    >
+                        <Ionicons name="logo-google" size={20} color={isDark ? '#9ca3af' : '#6b7280'} />
+                        <Text style={[styles.googleButtonText, { color: isDark ? '#d1d5db' : '#374151' }]}>
+                            Sign in with Google
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        onPress={continueAsGuest} 
+                        style={styles.guestButton}
+                    >
+                        <Text style={[styles.guestButtonText, { color: isDark ? '#9ca3af' : '#6b7280' }]}>
+                            Continue as guest
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
     );
 }
 
-// end
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 24,
+    },
+    themeToggle: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        zIndex: 1000,
+    },
+    content: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+        paddingTop: 80, // Account for theme toggle
+        gap: 24,
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: '700',
+        textAlign: 'center',
+        marginBottom: 8,
+        lineHeight: 36,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginBottom: 32,
+    },
+    formSection: {
+        gap: 16,
+        width: '100%',
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 8,
+    },
+    input: {
+        borderWidth: 1,
+        borderRadius: 12,
+        padding: 16,
+        fontSize: 16,
+        width: '100%',
+        minHeight: 52,
+    },
+    primaryButton: {
+        backgroundColor: '#3b82f6',
+        padding: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+        marginTop: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        width: '100%',
+        minHeight: 52,
+    },
+    primaryButtonText: {
+        color: '#ffffff',
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    secondaryButton: {
+        padding: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+        borderWidth: 1,
+        width: '100%',
+        minHeight: 52,
+    },
+    secondaryButtonText: {
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    divider: {
+        height: 1,
+        marginVertical: 24,
+    },
+    socialSection: {
+        gap: 16,
+    },
+    googleButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 16,
+        borderRadius: 12,
+        borderWidth: 1,
+        gap: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        width: '100%',
+        minHeight: 52,
+    },
+    googleButtonText: {
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    guestButton: {
+        padding: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+        width: '100%',
+        minHeight: 52,
+    },
+    guestButtonText: {
+        fontWeight: '600',
+        fontSize: 16,
+    },
+});

@@ -16,10 +16,8 @@
         "NSLocationWhenInUseUsageDescription": "This app needs access to location to show your position on the map and report civic issues near you.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs access to location to show your position on the map and report civic issues near you.",
         "NSCameraUsageDescription": "This app needs access to camera to take photos of civic issues.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to photo library to select images of civic issues."
-      },
-      "config": {
-        "googleMapsApiKey": "YOUR_IOS_GOOGLE_MAPS_API_KEY"
+        "NSPhotoLibraryUsageDescription": "This app needs access to photo library to select images of civic issues.",
+        "NSMicrophoneUsageDescription": "This app needs access to your microphone for reporting civic issues with audio."
       }
     },
     "android": {
@@ -35,13 +33,25 @@
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
       ],
-      "config": {
-        "googleMaps": {
-          "apiKey": "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
+      "intentFilters": [
+        {
+          "action": "android.intent.action.VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "civicai"
+            }
+          ],
+          "category": [
+            "android.intent.category.DEFAULT",
+            "android.intent.category.BROWSABLE"
+          ]
         }
-      }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -76,16 +86,23 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      ["expo-dev-client"] // Optional for native testing
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "updates": {
+      "url": "https://u.expo.dev/61b84a6a-4d1e-4040-adbf-b73025059c0e"
     },
     "extra": {
       "router": {},
       "eas": {
         "projectId": "61b84a6a-4d1e-4040-adbf-b73025059c0e"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     },
     "owner": "aryansanganti"
   }

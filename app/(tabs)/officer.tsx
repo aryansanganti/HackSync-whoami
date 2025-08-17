@@ -9,10 +9,10 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useColorScheme,
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '@/contexts/ThemeContext';
 import SupabaseService from '../../lib/supabase-service';
 import { CivicIssue, IssueCategory, IssueStatus } from '../../types';
 
@@ -23,7 +23,7 @@ interface FilterState {
 }
 
 export default function OfficerScreen() {
-  const colorScheme = useColorScheme();
+  const { isDark } = useTheme();
   const [issues, setIssues] = useState<CivicIssue[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedIssue, setSelectedIssue] = useState<CivicIssue | null>(null);
@@ -32,8 +32,6 @@ export default function OfficerScreen() {
   const [stats, setStats] = useState<any>({});
   const [refreshing, setRefreshing] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<IssueStatus | 'all'>('all');
-
-  const isDark = colorScheme === 'dark';
 
   useEffect(() => {
     loadIssues();

@@ -1,3 +1,4 @@
+import { useTheme } from '@/contexts/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import {
@@ -6,7 +7,6 @@ import {
     Easing,
     Modal,
     Text,
-    useColorScheme,
     View,
 } from 'react-native';
 
@@ -29,8 +29,7 @@ export default function AILoadingModal({
     currentAttempt = 1,
     maxAttempts = 3
 }: AILoadingModalProps) {
-    const colorScheme = useColorScheme();
-    const isDark = colorScheme === 'dark';
+    const { isDark } = useTheme();
 
     // Animation values
     const spinValue = useRef(new Animated.Value(0)).current;

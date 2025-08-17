@@ -1,7 +1,7 @@
+import { useTheme } from '@/contexts/ThemeContext';
 import { IssueDetailModal } from '@/components/map/IssueDetailModal';
 import { IssueFiltersModal } from '@/components/map/IssueFiltersModal';
 import { MapLegend } from '@/components/map/MapLegend';
-import { useTheme } from '@/contexts/ThemeContext';
 import { useLocation } from '@/hooks/useLocation';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -61,16 +61,16 @@ export default function MapScreen() {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState<CivicIssue | null>(null);
   const [issueDetailModalVisible, setIssueDetailModalVisible] = useState(false);
-
+  
   // Location handling
-  const {
-    userLocation,
+  const { 
+    userLocation, 
     region,
     isLoading: locationLoading,
     error: locationError,
-    getCurrentLocation
+    getCurrentLocation 
   } = useLocation();
-
+  
   const [filters, setFilters] = useState<FilterState>({
     showHeatmap: false,
   });
@@ -92,7 +92,7 @@ export default function MapScreen() {
   // Subscribe to real-time updates
   useEffect(() => {
     loadIssues();
-
+    
     const subscription = SupabaseService.subscribeToIssues((payload) => {
       console.log('Real-time update:', payload);
       loadIssues();
@@ -162,10 +162,10 @@ export default function MapScreen() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#111827' : '#f9fafb' }}>
         <View style={styles.errorContainer}>
-          <Ionicons
-            name="map-outline"
-            size={64}
-            color={isDark ? '#6b7280' : '#9ca3af'}
+          <Ionicons 
+            name="map-outline" 
+            size={64} 
+            color={isDark ? '#6b7280' : '#9ca3af'} 
           />
           <Text style={[styles.errorTitle, { color: isDark ? '#ffffff' : '#111827' }]}>
             Map Unavailable
@@ -238,10 +238,10 @@ export default function MapScreen() {
               <Callout>
                 <View style={styles.callout}>
                   <View style={styles.calloutHeader}>
-                    <Ionicons
-                      name={getCategoryIcon(issue.category)}
-                      size={16}
-                      color={getPriorityColor(issue.priority as Priority)}
+                    <Ionicons 
+                      name={getCategoryIcon(issue.category)} 
+                      size={16} 
+                      color={getPriorityColor(issue.priority as Priority)} 
                     />
                     <Text style={styles.calloutTitle}>{issue.title}</Text>
                   </View>
@@ -268,7 +268,7 @@ export default function MapScreen() {
           >
             <Ionicons name="locate" size={24} color={isDark ? '#60a5fa' : '#3b82f6'} />
           </TouchableOpacity>
-
+          
           <TouchableOpacity
             style={[styles.controlButton, { backgroundColor: isDark ? '#1f2937' : '#ffffff' }]}
             onPress={() => setFilterModalVisible(true)}
@@ -278,7 +278,7 @@ export default function MapScreen() {
         </View>
 
         <MapLegend isDark={isDark} />
-
+        
         <IssueFiltersModal
           visible={filterModalVisible}
           onClose={() => setFilterModalVisible(false)}

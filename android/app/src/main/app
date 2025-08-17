@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "scheme": "civicai",
+    "android": {
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            { "scheme": "civicai", "host": "auth-callback" }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    }
+  }
+}
