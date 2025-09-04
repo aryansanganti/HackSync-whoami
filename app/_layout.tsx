@@ -1,11 +1,14 @@
 
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
+import { initI18n } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import './global.css';
@@ -125,30 +128,77 @@ function RootLayoutContent() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack>
-          <Stack.Screen
-            name="(auth)"
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              headerShown: false,
-            }}
-          />
-        </Stack>
-        <StatusBar style={isDark ? 'light' : 'dark'} />
+        <>
+          <Stack>
+            <Stack.Screen
+              name="(auth)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack>
+          <StatusBar style={isDark ? 'light' : 'dark'} />
+        </>
       </GestureHandlerRootView>
     </SafeAreaProvider>
+  );
+}
+
+function I18nGate() {
+  const { isDark } = useTheme();
+  const [i18nReady, setI18nReady] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await initI18n();
+      } catch (e) {
+        console.error('Error initializing i18n (root):', e);
+      } finally {
+        setI18nReady(true);
+      }
+    })();
+  }, []);
+
+  if (!i18nReady) {
+    return (
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: isDark ? '#111827' : '#f9fafb'
+          }}>
+            <Text style={{
+              color: isDark ? '#ffffff' : '#111827',
+              fontSize: 16
+            }}>
+              Loading...
+            </Text>
+          </View>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    );
+  }
+
+  return (
+    <LanguageProvider>
+      <RootLayoutContent />
+    </LanguageProvider>
   );
 }
 
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <RootLayoutContent />
+      <I18nGate />
     </ThemeProvider>
   );
 }

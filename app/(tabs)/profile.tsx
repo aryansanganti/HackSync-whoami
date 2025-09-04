@@ -5,8 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, Image, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LanguageSelector from '../../components/LanguageSelector';
 
 interface User {
   displayName: string | null;
@@ -17,6 +19,7 @@ interface User {
 
 export default function ProfileScreen() {
   const { isDark, toggleTheme } = useTheme();
+  const { t } = useTranslation();
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [locationEnabled, setLocationEnabled] = useState(true);
@@ -74,54 +77,48 @@ export default function ProfileScreen() {
 
   const menuItems = [
     {
-      title: 'Account',
+      title: t('profile.account'),
       icon: 'person-outline',
       onPress: () => user ? null : handleSignIn,
       showArrow: true,
     },
     {
-      title: 'Notifications',
+      title: t('profile.notifications'),
       icon: 'notifications-outline',
       onPress: () => setNotificationsEnabled(!notificationsEnabled),
       showSwitch: true,
       switchValue: notificationsEnabled,
     },
     {
-      title: 'Location Services',
+      title: t('profile.locationServices'),
       icon: 'location-outline',
       onPress: () => setLocationEnabled(!locationEnabled),
       showSwitch: true,
       switchValue: locationEnabled,
     },
     {
-      title: 'Dark Mode',
+      title: t('profile.darkMode'),
       icon: 'moon-outline',
       onPress: toggleTheme,
       showSwitch: true,
       switchValue: isDark,
     },
     {
-      title: 'Language',
-      icon: 'language-outline',
-      onPress: () => Alert.alert('Language', 'Language settings coming soon'),
-      showArrow: true,
-    },
-    {
-      title: 'Privacy Policy',
+      title: t('profile.privacyPolicy'),
       icon: 'shield-outline',
-      onPress: () => Alert.alert('Privacy Policy', 'Privacy policy coming soon'),
+      onPress: () => Alert.alert(t('profile.privacyPolicy'), t('profile.privacyPolicyComingSoon')),
       showArrow: true,
     },
     {
-      title: 'Terms of Service',
+      title: t('profile.termsOfService'),
       icon: 'document-text-outline',
-      onPress: () => Alert.alert('Terms of Service', 'Terms of service coming soon'),
+      onPress: () => Alert.alert(t('profile.termsOfService'), t('profile.termsOfServiceComingSoon')),
       showArrow: true,
     },
     {
-      title: 'About',
+      title: t('profile.about'),
       icon: 'information-circle-outline',
-      onPress: () => Alert.alert('About', 'Civic AI v1.0.0\nEmpowering citizens to report civic issues'),
+      onPress: () => Alert.alert(t('profile.about'), `${t('profile.appName')} ${t('profile.version')}\n${t('profile.appDescription')}`),
       showArrow: true,
     },
   ];
@@ -146,14 +143,14 @@ export default function ProfileScreen() {
             color: isDark ? '#ffffff' : '#111827',
             marginBottom: 8
           }}>
-            Profile
+            {t('profile.title')}
           </Text>
           <Text style={{
             fontSize: 16,
             color: isDark ? '#9ca3af' : '#6b7280',
             marginBottom: 30
           }}>
-            Manage your account and preferences
+            {t('profile.manageAccount')}
           </Text>
 
           {/* User Info Card */}
@@ -234,7 +231,7 @@ export default function ProfileScreen() {
                     }}
                   >
                     <Text style={{ color: '#ffffff', fontSize: 14, fontWeight: '500' }}>
-                      Sign Out
+                      {t('profile.signOut')}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -246,7 +243,7 @@ export default function ProfileScreen() {
                     }}
                   >
                     <Text style={{ color: '#ffffff', fontSize: 14, fontWeight: '500' }}>
-                      Edit Profile
+                      {t('profile.editProfile')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -259,14 +256,14 @@ export default function ProfileScreen() {
                   color: isDark ? '#ffffff' : '#111827',
                   marginBottom: 4
                 }}>
-                  Guest User
+                  {t('profile.guestUser')}
                 </Text>
                 <Text style={{
                   fontSize: 14,
                   color: isDark ? '#9ca3af' : '#6b7280',
                   marginBottom: 16
                 }}>
-                  Sign in to access all features
+                  {t('profile.signInToAccess')}
                 </Text>
                 <TouchableOpacity
                   onPress={handleSignIn}
@@ -278,11 +275,21 @@ export default function ProfileScreen() {
                   }}
                 >
                   <Text style={{ color: '#ffffff', fontSize: 14, fontWeight: '500' }}>
-                    Sign In with Google
+                    {t('profile.signInWithGoogle')}
                   </Text>
                 </TouchableOpacity>
               </>
             )}
+          </View>
+
+          {/* Language Selector */}
+          <View style={{
+            backgroundColor: isDark ? '#1f2937' : '#ffffff',
+            borderRadius: 12,
+            padding: 16,
+            marginBottom: 20,
+          }}>
+            <LanguageSelector />
           </View>
 
           {/* Menu Items */}
@@ -341,7 +348,7 @@ export default function ProfileScreen() {
               fontSize: 12,
               color: isDark ? '#6b7280' : '#9ca3af'
             }}>
-              Civic AI v1.0.0
+              {t('profile.appName')} v1.0.0
             </Text>
           </View>
         </View>

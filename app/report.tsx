@@ -180,7 +180,7 @@ export default function ReportScreen() {
         setAiConfidence(analysis.confidence);
 
         // Show completion message before hiding loader
-        setLoadingMessage('✅ AI analysis complete! Processing results...');
+        setLoadingMessage('AI analysis complete! Processing results...');
 
         // Small delay to show completion message
         setTimeout(() => {
@@ -226,7 +226,7 @@ export default function ReportScreen() {
   const analyzeText = async (userText: string) => {
     if (!userText.trim()) return;
 
-    setLoadingMessage('📝 AI is analyzing your description...');
+    setLoadingMessage('AI is analyzing your description...');
     setIsAnalyzing(true);
     try {
       const analysis = await generateIssueDescription(userText, (message, attempt, maxAttempts) => {
@@ -536,7 +536,7 @@ export default function ReportScreen() {
                 color: isDark ? '#ffffff' : '#111827',
                 marginBottom: 4
               }}>
-                🤖 AI Analysis
+                AI Analysis
               </Text>
               <Text style={{
                 fontSize: 12,
@@ -555,7 +555,7 @@ export default function ReportScreen() {
               color: isDark ? '#ffffff' : '#111827',
               marginBottom: 12
             }}>
-              📸 Photos (AI will analyze automatically)
+              Photos (AI will analyze automatically)
             </Text>
 
             <View style={{ flexDirection: 'row', marginBottom: 12 }}>
@@ -630,7 +630,7 @@ export default function ReportScreen() {
               color: isDark ? '#ffffff' : '#111827',
               marginBottom: 8
             }}>
-              Title *
+              Title 
             </Text>
             <TextInput
               value={title}
@@ -657,7 +657,7 @@ export default function ReportScreen() {
               color: isDark ? '#ffffff' : '#111827',
               marginBottom: 8
             }}>
-              Description *
+              Description 
             </Text>
             <TextInput
               value={description}
@@ -830,7 +830,7 @@ export default function ReportScreen() {
               <ActivityIndicator color="#ffffff" />
             ) : (
               <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
-                {isAnonymous ? '🕶️ Submit Anonymous Report' : '🤖 Submit with AI Analysis'}
+                {isAnonymous ? '🕶️ Submit Anonymous Report' : 'Submit with AI Analysis'}
               </Text>
             )}
           </TouchableOpacity>

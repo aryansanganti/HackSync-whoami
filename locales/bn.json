@@ -1,0 +1,134 @@
+{
+  "common": {
+    "loading": "লোড হচ্ছে...",
+    "error": "ত্রুটি",
+    "success": "সফলতা",
+    "cancel": "বাতিল",
+    "save": "সংরক্ষণ",
+    "delete": "মুছে ফেলুন",
+    "edit": "সম্পাদনা",
+    "close": "বন্ধ",
+    "back": "ফিরে যান",
+    "next": "পরবর্তী",
+    "submit": "জমা দিন",
+    "search": "অনুসন্ধান",
+    "filter": "ফিল্টার",
+    "sort": "সাজান",
+    "refresh": "রিফ্রেশ",
+    "retry": "পুনরায় চেষ্টা",
+    "yes": "হ্যাঁ",
+    "no": "না",
+    "ok": "ঠিক আছে"
+  },
+  "navigation": {
+    "home": "হোম",
+    "map": "মানচিত্র",
+    "community": "সম্প্রদায়",
+    "profile": "প্রোফাইল",
+    "officersHome": "অফিসার হোম",
+    "allIssues": "সব সমস্যা",
+    "myIssues": "আমার সমস্যা"
+  },
+  "home": {
+    "title": "সিভিক এআই",
+    "officerTitle": "অফিসার ড্যাশবোর্ড",
+    "subtitle": "আপনার এলাকায় নাগরিক সমস্যা রিপোর্ট করুন এবং ট্র্যাক করুন",
+    "officerSubtitle": "নাগরিক সমস্যা পরিচালনা করুন এবং অগ্রগতি ট্র্যাক করুন",
+    "reportNewIssue": "নতুন সমস্যা রিপোর্ট করুন",
+    "myIssues": "আমার সমস্যা",
+    "myIssuesDescription": "আপনার রিপোর্ট করা সমস্যাগুলি ট্র্যাক করুন",
+    "viewAllIssues": "সব সমস্যা দেখুন",
+    "reportIssue": "সমস্যা রিপোর্ট করুন",
+    "reportIssueDescription": "অফিসারদের জন্য ম্যানুয়াল এন্ট্রি",
+    "quickStats": "দ্রুত পরিসংখ্যান",
+    "totalIssues": "মোট সমস্যা",
+    "resolved": "সমাধান",
+    "pending": "মুলতুবি",
+    "viewIssuesOnMap": "মানচিত্রে সমস্যা দেখুন",
+    "viewIssuesOnMapDescription": "আপনার এলাকায় রিপোর্ট করা সব সমস্যা দেখুন",
+    "officerViewIssuesOnMapDescription": "আপনার এলাকার সব সমস্যা দেখুন"
+  },
+  "auth": {
+    "signIn": "সাইন ইন",
+    "signOut": "সাইন আউট",
+    "signInWithGoogle": "Google দিয়ে সাইন ইন করুন",
+    "signInAnonymously": "অতিথি হিসাবে চালিয়ে যান",
+    "welcome": "সিভিক এআই-তে স্বাগতম",
+    "welcomeDescription": "আপনার সম্প্রদায়ে নাগরিক সমস্যা রিপোর্ট করুন এবং ট্র্যাক করুন"
+  },
+  "report": {
+    "title": "সমস্যা রিপোর্ট করুন",
+    "issueType": "সমস্যার ধরন",
+    "description": "বিবরণ",
+    "location": "অবস্থান",
+    "priority": "অগ্রাধিকার",
+    "addPhoto": "ফটো যোগ করুন",
+    "takePhoto": "ফটো তুলুন",
+    "selectFromGallery": "গ্যালারি থেকে নির্বাচন করুন",
+    "locationPermission": "অবস্থানের অনুমতি",
+    "locationPermissionDescription": "মানচিত্রে সমস্যাটি সঠিকভাবে রাখার জন্য আমাদের আপনার অবস্থান প্রয়োজন",
+    "allowLocation": "অবস্থানের অনুমতি দিন",
+    "skipLocation": "অবস্থান এড়িয়ে যান",
+    "issueSubmitted": "সমস্যা জমা দেওয়া হয়েছে",
+    "issueSubmittedDescription": "আপনার সমস্যা সফলভাবে জমা দেওয়া হয়েছে। আপনি 'আমার সমস্যা'তে এর অগ্রগতি ট্র্যাক করতে পারেন।",
+    "submitAnother": "অন্য সমস্যা জমা দিন",
+    "viewMyIssues": "আমার সমস্যা দেখুন"
+  },
+  "issues": {
+    "status": {
+      "pending": "মুলতুবি",
+      "inProgress": "চলমান",
+      "resolved": "সমাধান",
+      "closed": "বন্ধ"
+    },
+    "priority": {
+      "low": "নিম্ন",
+      "medium": "মাঝারি",
+      "high": "উচ্চ",
+      "urgent": "জরুরি"
+    },
+    "types": {
+      "pothole": "গর্ত",
+      "streetLight": "রাস্তার আলো",
+      "garbage": "আবর্জনা সংগ্রহ",
+      "water": "জল সমস্যা",
+      "sewage": "নর্দমা সমস্যা",
+      "road": "রাস্তা মেরামত",
+      "traffic": "ট্রাফিক সিগন্যাল",
+      "other": "অন্যান্য"
+    }
+  },
+  "map": {
+    "title": "সমস্যার মানচিত্র",
+    "noIssuesFound": "এই এলাকায় কোন সমস্যা পাওয়া যায়নি",
+    "tapToReport": "নতুন সমস্যা রিপোর্ট করতে মানচিত্রে ট্যাপ করুন",
+    "myLocation": "আমার অবস্থান",
+    "filters": "ফিল্টার",
+    "legend": "লেজেন্ড"
+  },
+  "profile": {
+    "title": "প্রোফাইল",
+    "language": "ভাষা",
+    "theme": "থিম",
+    "notifications": "বিজ্ঞপ্তি",
+    "about": "সম্পর্কে",
+    "version": "সংস্করণ",
+    "selectLanguage": "ভাষা নির্বাচন করুন",
+    "currentLanguage": "বর্তমান ভাষা"
+  },
+  "community": {
+    "title": "সম্প্রদায়",
+    "recentActivity": "সাম্প্রতিক কার্যকলাপ",
+    "topContributors": "শীর্ষ অবদানকারী",
+    "communityStats": "সম্প্রদায় পরিসংখ্যান"
+  },
+  "officer": {
+    "dashboard": "অফিসার ড্যাশবোর্ড",
+    "allIssues": "সব সমস্যা",
+    "assignToMe": "আমাকে অর্পণ করুন",
+    "markAsResolved": "সমাধান হিসাবে চিহ্নিত করুন",
+    "addComment": "মন্তব্য যোগ করুন",
+    "updateStatus": "অবস্থা আপডেট করুন",
+    "issueDetails": "সমস্যার বিবরণ"
+  }
+}

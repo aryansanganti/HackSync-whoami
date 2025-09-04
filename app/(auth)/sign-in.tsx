@@ -6,6 +6,7 @@ import { makeRedirectUri } from 'expo-auth-session';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, AppState, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -13,6 +14,7 @@ WebBrowser.maybeCompleteAuthSession();
 export default function SignIn() {
     const router = useRouter();
     const { isDark, toggleTheme, theme } = useTheme();
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -187,10 +189,10 @@ export default function SignIn() {
 
             <View style={styles.content}>
                 <Text style={[styles.title, { color: isDark ? '#ffffff' : '#111827' }]}>
-                    Welcome to Civic-AI
+                    {t('auth.welcome')}
                 </Text>
                 <Text style={[styles.subtitle, { color: isDark ? '#9ca3af' : '#6b7280' }]}>
-                    Report civic issues and track their resolution
+                    {t('auth.welcomeDescription')}
                 </Text>
 
                 <View style={styles.formSection}>
@@ -229,7 +231,7 @@ export default function SignIn() {
                         style={[styles.primaryButton, { opacity: loading ? 0.7 : 1 }]}
                     >
                         <Text style={styles.primaryButtonText}>
-                            {loading ? 'Signing in…' : 'Sign In'}
+                            {loading ? t('common.loading') : t('auth.signIn')}
                         </Text>
                     </TouchableOpacity>
 
@@ -242,7 +244,7 @@ export default function SignIn() {
                         }]}
                     >
                         <Text style={[styles.secondaryButtonText, { color: isDark ? '#d1d5db' : '#374151' }]}>
-                            {loading ? 'Please wait…' : 'Sign Up'}
+                            {loading ? t('common.loading') : t('auth.signUp')}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -260,7 +262,7 @@ export default function SignIn() {
                     >
                         <Ionicons name="logo-google" size={20} color={isDark ? '#9ca3af' : '#6b7280'} />
                         <Text style={[styles.googleButtonText, { color: isDark ? '#d1d5db' : '#374151' }]}>
-                            Sign in with Google
+                            {t('auth.signInWithGoogle')}
                         </Text>
                     </TouchableOpacity>
 
@@ -269,7 +271,7 @@ export default function SignIn() {
                         style={styles.guestButton}
                     >
                         <Text style={[styles.guestButtonText, { color: isDark ? '#9ca3af' : '#6b7280' }]}>
-                            Continue as guest
+                            {t('auth.signInAnonymously')}
                         </Text>
                     </TouchableOpacity>
                 </View>

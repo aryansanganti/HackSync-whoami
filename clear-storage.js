@@ -1,9 +1,7 @@
-// Temporary script to clear SecureStore data
 import * as SecureStore from 'expo-secure-store';
 
 const clearSecureStore = async () => {
     try {
-        // Common Supabase keys that might exist
         const possibleKeys = [
             'supabase/auth/session',
             'supabase_auth_session',
@@ -19,7 +17,6 @@ const clearSecureStore = async () => {
                 await SecureStore.deleteItemAsync(key);
                 console.log(`Cleared: ${key}`);
             } catch (error) {
-                // Key probably doesn't exist, which is fine
             }
         }
 

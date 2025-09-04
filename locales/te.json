@@ -1,0 +1,134 @@
+{
+  "common": {
+    "loading": "లోడ్ అవుతోంది...",
+    "error": "లోపం",
+    "success": "విజయం",
+    "cancel": "రద్దు చేయండి",
+    "save": "సేవ్ చేయండి",
+    "delete": "తొలగించండి",
+    "edit": "సవరించండి",
+    "close": "మూసివేయండి",
+    "back": "వెనుకకు",
+    "next": "తదుపరి",
+    "submit": "సమర్పించండి",
+    "search": "వెతకండి",
+    "filter": "ఫిల్టర్",
+    "sort": "క్రమబద్ధీకరించండి",
+    "refresh": "రిఫ్రెష్",
+    "retry": "మళ్లీ ప్రయత్నించండి",
+    "yes": "అవును",
+    "no": "కాదు",
+    "ok": "సరే"
+  },
+  "navigation": {
+    "home": "హోమ్",
+    "map": "మ్యాప్",
+    "community": "కమ్యూనిటీ",
+    "profile": "ప్రొఫైల్",
+    "officersHome": "అధికారి హోమ్",
+    "allIssues": "అన్ని సమస్యలు",
+    "myIssues": "నా సమస్యలు"
+  },
+  "home": {
+    "title": "సివిక్ ఎఐ",
+    "officerTitle": "అధికారి డ్యాష్‌బోర్డ్",
+    "subtitle": "మీ ప్రాంతంలో పౌర సమస్యలను నివేదించండి మరియు ట్రాక్ చేయండి",
+    "officerSubtitle": "పౌర సమస్యలను నిర్వహించండి మరియు పురోగతిని ట్రాక్ చేయండి",
+    "reportNewIssue": "కొత్త సమస్యను నివేదించండి",
+    "myIssues": "నా సమస్యలు",
+    "myIssuesDescription": "మీరు నివేదించిన సమస్యలను ట్రాక్ చేయండి",
+    "viewAllIssues": "అన్ని సమస్యలను చూడండి",
+    "reportIssue": "సమస్యను నివేదించండి",
+    "reportIssueDescription": "అధికారుల కోసం మాన్యువల్ ఎంట్రీ",
+    "quickStats": "త్వరిత గణాంకాలు",
+    "totalIssues": "మొత్తం సమస్యలు",
+    "resolved": "పరిష్కరించబడింది",
+    "pending": "పెండింగ్",
+    "viewIssuesOnMap": "మ్యాప్‌లో సమస్యలను చూడండి",
+    "viewIssuesOnMapDescription": "మీ ప్రాంతంలో నివేదించబడిన అన్ని సమస్యలను చూడండి",
+    "officerViewIssuesOnMapDescription": "మీ ప్రాంతంలోని అన్ని సమస్యలను చూడండి"
+  },
+  "auth": {
+    "signIn": "సైన్ ఇన్",
+    "signOut": "సైన్ అవుట్",
+    "signInWithGoogle": "Googleతో సైన్ ఇన్ చేయండి",
+    "signInAnonymously": "అతిథిగా కొనసాగించండి",
+    "welcome": "సివిక్ ఎఐకి స్వాగతం",
+    "welcomeDescription": "మీ కమ్యూనిటీలో పౌర సమస్యలను నివేదించండి మరియు ట్రాక్ చేయండి"
+  },
+  "report": {
+    "title": "సమస్యను నివేదించండి",
+    "issueType": "సమస్య రకం",
+    "description": "వివరణ",
+    "location": "స్థానం",
+    "priority": "ప్రాధాన్యత",
+    "addPhoto": "ఫోటో జోడించండి",
+    "takePhoto": "ఫోటో తీయండి",
+    "selectFromGallery": "గ్యాలరీ నుండి ఎంచుకోండి",
+    "locationPermission": "స్థాన అనుమతి",
+    "locationPermissionDescription": "మ్యాప్‌లో సమస్యను ఖచ్చితంగా ఉంచడానికి మాకు మీ స్థానం అవసరం",
+    "allowLocation": "స్థాన అనుమతిని ఇవ్వండి",
+    "skipLocation": "స్థానాన్ని దాటవేయండి",
+    "issueSubmitted": "సమస్య సమర్పించబడింది",
+    "issueSubmittedDescription": "మీ సమస్య విజయవంతంగా సమర్పించబడింది. మీరు 'నా సమస్యలు'లో దాని పురోగతిని ట్రాక్ చేయవచ్చు.",
+    "submitAnother": "మరొక సమస్యను సమర్పించండి",
+    "viewMyIssues": "నా సమస్యలను చూడండి"
+  },
+  "issues": {
+    "status": {
+      "pending": "పెండింగ్",
+      "inProgress": "పురోగతిలో",
+      "resolved": "పరిష్కరించబడింది",
+      "closed": "మూసివేయబడింది"
+    },
+    "priority": {
+      "low": "తక్కువ",
+      "medium": "మధ్యస్థ",
+      "high": "ఎక్కువ",
+      "urgent": "అత్యవసర"
+    },
+    "types": {
+      "pothole": "బోరు",
+      "streetLight": "వీధి దీపం",
+      "garbage": "చెత్త సేకరణ",
+      "water": "నీటి సమస్య",
+      "sewage": "మురుగు సమస్య",
+      "road": "రోడ్ మరమ్మతు",
+      "traffic": "ట్రాఫిక్ సిగ్నల్",
+      "other": "ఇతర"
+    }
+  },
+  "map": {
+    "title": "సమస్యల మ్యాప్",
+    "noIssuesFound": "ఈ ప్రాంతంలో సమస్యలు కనుగొనబడలేదు",
+    "tapToReport": "కొత్త సమస్యను నివేదించడానికి మ్యాప్‌పై ట్యాప్ చేయండి",
+    "myLocation": "నా స్థానం",
+    "filters": "ఫిల్టర్లు",
+    "legend": "లెజెండ్"
+  },
+  "profile": {
+    "title": "ప్రొఫైల్",
+    "language": "భాష",
+    "theme": "థీమ్",
+    "notifications": "నోటిఫికేషన్లు",
+    "about": "గురించి",
+    "version": "వెర్షన్",
+    "selectLanguage": "భాషను ఎంచుకోండి",
+    "currentLanguage": "ప్రస్తుత భాష"
+  },
+  "community": {
+    "title": "కమ్యూనిటీ",
+    "recentActivity": "ఇటీవలి కార్యకలాపం",
+    "topContributors": "అగ్రస్థాన సహకారులు",
+    "communityStats": "కమ్యూనిటీ గణాంకాలు"
+  },
+  "officer": {
+    "dashboard": "అధికారి డ్యాష్‌బోర్డ్",
+    "allIssues": "అన్ని సమస్యలు",
+    "assignToMe": "నాకు కేటాయించండి",
+    "markAsResolved": "పరిష్కరించబడిందిగా గుర్తించండి",
+    "addComment": "వ్యాఖ్యను జోడించండి",
+    "updateStatus": "స్థితిని నవీకరించండి",
+    "issueDetails": "సమస్య వివరాలు"
+  }
+}

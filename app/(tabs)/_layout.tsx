@@ -4,10 +4,12 @@ import { supabase } from '@/lib/supabase';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
 
 export default function TabLayout() {
   const { isDark, toggleTheme } = useTheme();
+  const { t } = useTranslation();
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -79,7 +81,7 @@ export default function TabLayout() {
         name="index"
         options={{
           href: showCitizenTabs ? undefined : null,
-          title: 'Home',
+          title: t('navigation.home'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
           ),
@@ -91,7 +93,7 @@ export default function TabLayout() {
         name="officer"
         options={{
           href: showCitizenTabs ? null : undefined,
-          title: 'Officers Home',
+          title: t('navigation.officersHome'),
           tabBarIcon: ({ color, focused }) => (
              <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
           ),
@@ -102,7 +104,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="map"
         options={{
-          title: 'Map',
+          title: t('navigation.map'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'map' : 'map-outline'} size={24} color={color} />
           ),
@@ -114,7 +116,7 @@ export default function TabLayout() {
         name="all-issues"
         options={{
           href: showCitizenTabs ? null : undefined,
-          title: 'All Issues',
+          title: t('navigation.allIssues'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'list' : 'list-outline'} size={24} color={color} />
           ),
@@ -126,7 +128,7 @@ export default function TabLayout() {
         name="community"
         options={{
           href: showCitizenTabs ? undefined : null,
-          title: 'Community',
+          title: t('navigation.community'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'people' : 'people-outline'} size={24} color={color} />
           ),
@@ -138,7 +140,7 @@ export default function TabLayout() {
         name="my-issues"
         options={{
           href: null,
-          title: 'My Issues',
+          title: t('navigation.myIssues'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'document-text' : 'document-text-outline'} size={24} color={color} />
           ),
@@ -149,7 +151,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: t('navigation.profile'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'person' : 'person-outline'}

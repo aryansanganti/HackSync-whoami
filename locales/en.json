@@ -1,0 +1,150 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK"
+  },
+  "navigation": {
+    "home": "Home",
+    "map": "Map",
+    "community": "Community",
+    "profile": "Profile",
+    "officersHome": "Officers Home",
+    "allIssues": "All Issues",
+    "myIssues": "My Issues"
+  },
+  "home": {
+    "title": "Civic AI",
+    "officerTitle": "Officer Dashboard",
+    "subtitle": "Report and track civic issues in your area",
+    "officerSubtitle": "Manage civic issues and track progress",
+    "reportNewIssue": "Report New Issue",
+    "myIssues": "My Issues",
+    "myIssuesDescription": "Track your reported issues",
+    "viewAllIssues": "View All Issues",
+    "reportIssue": "Report Issue",
+    "reportIssueDescription": "Manual entry for officers",
+    "quickStats": "Quick Stats",
+    "totalIssues": "Total Issues",
+    "resolved": "Resolved",
+    "pending": "Pending",
+    "viewIssuesOnMap": "View Issues on Map",
+    "viewIssuesOnMapDescription": "See all reported issues in your area",
+    "officerViewIssuesOnMapDescription": "See all issues across your area"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "signInWithGoogle": "Sign in with Google",
+    "signInAnonymously": "Continue as Guest",
+    "welcome": "Welcome to Civic AI",
+    "welcomeDescription": "Report and track civic issues in your community"
+  },
+  "report": {
+    "title": "Report Issue",
+    "issueType": "Issue Type",
+    "description": "Description",
+    "location": "Location",
+    "priority": "Priority",
+    "addPhoto": "Add Photo",
+    "takePhoto": "Take Photo",
+    "selectFromGallery": "Select from Gallery",
+    "locationPermission": "Location Permission",
+    "locationPermissionDescription": "We need your location to accurately place the issue on the map",
+    "allowLocation": "Allow Location",
+    "skipLocation": "Skip Location",
+    "issueSubmitted": "Issue Submitted",
+    "issueSubmittedDescription": "Your issue has been submitted successfully. You can track its progress in 'My Issues'.",
+    "submitAnother": "Submit Another Issue",
+    "viewMyIssues": "View My Issues"
+  },
+  "issues": {
+    "status": {
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "types": {
+      "pothole": "Pothole",
+      "streetLight": "Street Light",
+      "garbage": "Garbage Collection",
+      "water": "Water Issue",
+      "sewage": "Sewage Problem",
+      "road": "Road Repair",
+      "traffic": "Traffic Signal",
+      "other": "Other"
+    }
+  },
+  "map": {
+    "title": "Issues Map",
+    "noIssuesFound": "No issues found in this area",
+    "tapToReport": "Tap on the map to report a new issue",
+    "myLocation": "My Location",
+    "filters": "Filters",
+    "legend": "Legend"
+  },
+  "profile": {
+    "title": "Profile",
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "about": "About",
+    "version": "Version",
+    "selectLanguage": "Select Language",
+    "currentLanguage": "Current Language",
+    "account": "Account",
+    "locationServices": "Location Services",
+    "darkMode": "Dark Mode",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "appName": "Civic AI",
+    "appDescription": "Empowering citizens to report civic issues",
+    "privacyPolicyComingSoon": "Privacy policy coming soon",
+    "termsOfServiceComingSoon": "Terms of service coming soon",
+    "manageAccount": "Manage your account and preferences",
+    "guestUser": "Guest User",
+    "signInToAccess": "Sign in to access all features",
+    "signInWithGoogle": "Sign In with Google",
+    "signOut": "Sign Out",
+    "editProfile": "Edit Profile"
+  },
+  "community": {
+    "title": "Community",
+    "recentActivity": "Recent Activity",
+    "topContributors": "Top Contributors",
+    "communityStats": "Community Stats"
+  },
+  "officer": {
+    "dashboard": "Officer Dashboard",
+    "allIssues": "All Issues",
+    "assignToMe": "Assign to Me",
+    "markAsResolved": "Mark as Resolved",
+    "addComment": "Add Comment",
+    "updateStatus": "Update Status",
+    "issueDetails": "Issue Details"
+  }
+}

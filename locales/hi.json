@@ -1,0 +1,134 @@
+{
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि",
+    "success": "सफलता",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "close": "बंद करें",
+    "back": "वापस",
+    "next": "अगला",
+    "submit": "जमा करें",
+    "search": "खोजें",
+    "filter": "फिल्टर",
+    "sort": "क्रमबद्ध करें",
+    "refresh": "रिफ्रेश करें",
+    "retry": "पुनः प्रयास करें",
+    "yes": "हाँ",
+    "no": "नहीं",
+    "ok": "ठीक है"
+  },
+  "navigation": {
+    "home": "होम",
+    "map": "नक्शा",
+    "community": "समुदाय",
+    "profile": "प्रोफ़ाइल",
+    "officersHome": "अधिकारी होम",
+    "allIssues": "सभी मुद्दे",
+    "myIssues": "मेरे मुद्दे"
+  },
+  "home": {
+    "title": "सिविक एआई",
+    "officerTitle": "अधिकारी डैशबोर्ड",
+    "subtitle": "अपने क्षेत्र में नागरिक मुद्दों की रिपोर्ट करें और ट्रैक करें",
+    "officerSubtitle": "नागरिक मुद्दों का प्रबंधन करें और प्रगति को ट्रैक करें",
+    "reportNewIssue": "नया मुद्दा रिपोर्ट करें",
+    "myIssues": "मेरे मुद्दे",
+    "myIssuesDescription": "अपने रिपोर्ट किए गए मुद्दों को ट्रैक करें",
+    "viewAllIssues": "सभी मुद्दे देखें",
+    "reportIssue": "मुद्दा रिपोर्ट करें",
+    "reportIssueDescription": "अधिकारियों के लिए मैनुअल प्रविष्टि",
+    "quickStats": "त्वरित आंकड़े",
+    "totalIssues": "कुल मुद्दे",
+    "resolved": "हल",
+    "pending": "लंबित",
+    "viewIssuesOnMap": "नक्शे पर मुद्दे देखें",
+    "viewIssuesOnMapDescription": "अपने क्षेत्र में सभी रिपोर्ट किए गए मुद्दे देखें",
+    "officerViewIssuesOnMapDescription": "अपने क्षेत्र में सभी मुद्दे देखें"
+  },
+  "auth": {
+    "signIn": "साइन इन करें",
+    "signOut": "साइन आउट करें",
+    "signInWithGoogle": "Google के साथ साइन इन करें",
+    "signInAnonymously": "अतिथि के रूप में जारी रखें",
+    "welcome": "सिविक एआई में आपका स्वागत है",
+    "welcomeDescription": "अपने समुदाय में नागरिक मुद्दों की रिपोर्ट करें और ट्रैक करें"
+  },
+  "report": {
+    "title": "मुद्दा रिपोर्ट करें",
+    "issueType": "मुद्दे का प्रकार",
+    "description": "विवरण",
+    "location": "स्थान",
+    "priority": "प्राथमिकता",
+    "addPhoto": "फोटो जोड़ें",
+    "takePhoto": "फोटो लें",
+    "selectFromGallery": "गैलरी से चुनें",
+    "locationPermission": "स्थान की अनुमति",
+    "locationPermissionDescription": "मुद्दे को नक्शे पर सटीक रूप से रखने के लिए हमें आपका स्थान चाहिए",
+    "allowLocation": "स्थान की अनुमति दें",
+    "skipLocation": "स्थान छोड़ें",
+    "issueSubmitted": "मुद्दा जमा हो गया",
+    "issueSubmittedDescription": "आपका मुद्दा सफलतापूर्वक जमा हो गया है। आप 'मेरे मुद्दे' में इसकी प्रगति को ट्रैक कर सकते हैं।",
+    "submitAnother": "दूसरा मुद्दा जमा करें",
+    "viewMyIssues": "मेरे मुद्दे देखें"
+  },
+  "issues": {
+    "status": {
+      "pending": "लंबित",
+      "inProgress": "प्रगति में",
+      "resolved": "हल",
+      "closed": "बंद"
+    },
+    "priority": {
+      "low": "कम",
+      "medium": "मध्यम",
+      "high": "उच्च",
+      "urgent": "तत्काल"
+    },
+    "types": {
+      "pothole": "गड्ढा",
+      "streetLight": "स्ट्रीट लाइट",
+      "garbage": "कचरा संग्रह",
+      "water": "पानी की समस्या",
+      "sewage": "सीवेज की समस्या",
+      "road": "सड़क की मरम्मत",
+      "traffic": "ट्रैफिक सिग्नल",
+      "other": "अन्य"
+    }
+  },
+  "map": {
+    "title": "मुद्दों का नक्शा",
+    "noIssuesFound": "इस क्षेत्र में कोई मुद्दे नहीं मिले",
+    "tapToReport": "नया मुद्दा रिपोर्ट करने के लिए नक्शे पर टैप करें",
+    "myLocation": "मेरा स्थान",
+    "filters": "फिल्टर",
+    "legend": "किंवदंती"
+  },
+  "profile": {
+    "title": "प्रोफ़ाइल",
+    "language": "भाषा",
+    "theme": "थीम",
+    "notifications": "सूचनाएं",
+    "about": "के बारे में",
+    "version": "संस्करण",
+    "selectLanguage": "भाषा चुनें",
+    "currentLanguage": "वर्तमान भाषा"
+  },
+  "community": {
+    "title": "समुदाय",
+    "recentActivity": "हाल की गतिविधि",
+    "topContributors": "शीर्ष योगदानकर्ता",
+    "communityStats": "समुदाय आंकड़े"
+  },
+  "officer": {
+    "dashboard": "अधिकारी डैशबोर्ड",
+    "allIssues": "सभी मुद्दे",
+    "assignToMe": "मुझे सौंपें",
+    "markAsResolved": "हल के रूप में चिह्नित करें",
+    "addComment": "टिप्पणी जोड़ें",
+    "updateStatus": "स्थिति अपडेट करें",
+    "issueDetails": "मुद्दे का विवरण"
+  }
+}

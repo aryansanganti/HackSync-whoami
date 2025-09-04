@@ -1,0 +1,134 @@
+{
+  "common": {
+    "loading": "लोड होत आहे...",
+    "error": "त्रुटी",
+    "success": "यश",
+    "cancel": "रद्द करा",
+    "save": "जतन करा",
+    "delete": "हटवा",
+    "edit": "संपादित करा",
+    "close": "बंद करा",
+    "back": "मागे",
+    "next": "पुढे",
+    "submit": "सबमिट करा",
+    "search": "शोधा",
+    "filter": "फिल्टर",
+    "sort": "क्रमवारी लावा",
+    "refresh": "रिफ्रेश करा",
+    "retry": "पुन्हा प्रयत्न करा",
+    "yes": "होय",
+    "no": "नाही",
+    "ok": "ठीक आहे"
+  },
+  "navigation": {
+    "home": "होम",
+    "map": "नकाशा",
+    "community": "समुदाय",
+    "profile": "प्रोफाइल",
+    "officersHome": "अधिकारी होम",
+    "allIssues": "सर्व समस्या",
+    "myIssues": "माझ्या समस्या"
+  },
+  "home": {
+    "title": "सिविक एआय",
+    "officerTitle": "अधिकारी डॅशबोर्ड",
+    "subtitle": "तुमच्या क्षेत्रातील नागरी समस्या नोंदवा आणि ट्रॅक करा",
+    "officerSubtitle": "नागरी समस्या व्यवस्थापित करा आणि प्रगती ट्रॅक करा",
+    "reportNewIssue": "नवीन समस्या नोंदवा",
+    "myIssues": "माझ्या समस्या",
+    "myIssuesDescription": "तुम्ही नोंदवलेल्या समस्या ट्रॅक करा",
+    "viewAllIssues": "सर्व समस्या पहा",
+    "reportIssue": "समस्या नोंदवा",
+    "reportIssueDescription": "अधिकाऱ्यांसाठी मॅन्युअल एंट्री",
+    "quickStats": "द्रुत आकडेवारी",
+    "totalIssues": "एकूण समस्या",
+    "resolved": "सोडवले",
+    "pending": "प्रलंबित",
+    "viewIssuesOnMap": "नकाशावर समस्या पहा",
+    "viewIssuesOnMapDescription": "तुमच्या क्षेत्रातील सर्व नोंदवलेल्या समस्या पहा",
+    "officerViewIssuesOnMapDescription": "तुमच्या क्षेत्रातील सर्व समस्या पहा"
+  },
+  "auth": {
+    "signIn": "साइन इन करा",
+    "signOut": "साइन आउट करा",
+    "signInWithGoogle": "Google सह साइन इन करा",
+    "signInAnonymously": "पाहुणा म्हणून सुरू ठेवा",
+    "welcome": "सिविक एआयमध्ये आपले स्वागत आहे",
+    "welcomeDescription": "तुमच्या समुदायातील नागरी समस्या नोंदवा आणि ट्रॅक करा"
+  },
+  "report": {
+    "title": "समस्या नोंदवा",
+    "issueType": "समस्येचा प्रकार",
+    "description": "वर्णन",
+    "location": "स्थान",
+    "priority": "प्राधान्य",
+    "addPhoto": "फोटो जोडा",
+    "takePhoto": "फोटो काढा",
+    "selectFromGallery": "गॅलरीमधून निवडा",
+    "locationPermission": "स्थान परवानगी",
+    "locationPermissionDescription": "नकाशावर समस्या अचूक ठेवण्यासाठी आम्हाला तुमचे स्थान हवे",
+    "allowLocation": "स्थान परवानगी द्या",
+    "skipLocation": "स्थान वगळा",
+    "issueSubmitted": "समस्या सबमिट केली",
+    "issueSubmittedDescription": "तुमची समस्या यशस्वीरित्या सबमिट केली गेली आहे. तुम्ही 'माझ्या समस्या'मध्ये त्याची प्रगती ट्रॅक करू शकता.",
+    "submitAnother": "दुसरी समस्या सबमिट करा",
+    "viewMyIssues": "माझ्या समस्या पहा"
+  },
+  "issues": {
+    "status": {
+      "pending": "प्रलंबित",
+      "inProgress": "प्रगतीत",
+      "resolved": "सोडवले",
+      "closed": "बंद"
+    },
+    "priority": {
+      "low": "कमी",
+      "medium": "मध्यम",
+      "high": "उच्च",
+      "urgent": "तातडीचे"
+    },
+    "types": {
+      "pothole": "खड्डा",
+      "streetLight": "रस्त्याचा दिवा",
+      "garbage": "कचरा गोळा",
+      "water": "पाण्याची समस्या",
+      "sewage": "सीवेजची समस्या",
+      "road": "रस्ता दुरुस्ती",
+      "traffic": "ट्रॅफिक सिग्नल",
+      "other": "इतर"
+    }
+  },
+  "map": {
+    "title": "समस्यांचा नकाशा",
+    "noIssuesFound": "या क्षेत्रात कोणत्याही समस्या सापडल्या नाहीत",
+    "tapToReport": "नवीन समस्या नोंदवण्यासाठी नकाशावर टॅप करा",
+    "myLocation": "माझे स्थान",
+    "filters": "फिल्टर",
+    "legend": "कथा"
+  },
+  "profile": {
+    "title": "प्रोफाइल",
+    "language": "भाषा",
+    "theme": "थीम",
+    "notifications": "सूचना",
+    "about": "बद्दल",
+    "version": "आवृत्ती",
+    "selectLanguage": "भाषा निवडा",
+    "currentLanguage": "सध्याची भाषा"
+  },
+  "community": {
+    "title": "समुदाय",
+    "recentActivity": "अलीकडील क्रियाकलाप",
+    "topContributors": "अग्रगण्य योगदानकर्ते",
+    "communityStats": "समुदाय आकडेवारी"
+  },
+  "officer": {
+    "dashboard": "अधिकारी डॅशबोर्ड",
+    "allIssues": "सर्व समस्या",
+    "assignToMe": "माझ्याकडे नियुक्त करा",
+    "markAsResolved": "सोडवले म्हणून चिन्हांकित करा",
+    "addComment": "टिप्पणी जोडा",
+    "updateStatus": "स्थिती अपडेट करा",
+    "issueDetails": "समस्येचे तपशील"
+  }
+}

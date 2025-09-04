@@ -5,12 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SupabaseService from '../../lib/supabase-service';
 
 export default function HomeScreen() {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [quickStats, setQuickStats] = useState<{ total: number; byStatus: Record<string, number> }>({
@@ -84,7 +86,7 @@ export default function HomeScreen() {
             color: isDark ? '#ffffff' : '#111827',
             marginBottom: 8
           }}>
-            {isOfficer ? 'Officer Dashboard' : 'Civic AI'}
+            {isOfficer ? t('home.officerTitle') : t('home.title')}
           </Text>
           <Text style={{
             fontSize: 16,
@@ -92,8 +94,8 @@ export default function HomeScreen() {
             marginBottom: 20
           }}>
             {isOfficer
-              ? 'Manage civic issues and track progress'
-              : 'Report and track civic issues in your area'
+              ? t('home.officerSubtitle')
+              : t('home.subtitle')
             }
           </Text>
 
@@ -114,7 +116,7 @@ export default function HomeScreen() {
               >
                 <Ionicons name="add-circle" size={24} color="#ffffff" style={{ marginRight: 8 }} />
                 <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
-                  Report New Issue
+                  {t('home.reportNewIssue')}
                 </Text>
               </TouchableOpacity>
 
@@ -134,10 +136,10 @@ export default function HomeScreen() {
                 <Ionicons name="document-text" size={24} color={isDark ? '#60a5fa' : '#3b82f6'} style={{ marginRight: 12 }} />
                 <View style={{ flex: 1 }}>
                   <Text style={{ fontSize: 16, fontWeight: '600', color: isDark ? '#ffffff' : '#111827' }}>
-                    My Issues
+                    {t('home.myIssues')}
                   </Text>
                   <Text style={{ fontSize: 14, color: isDark ? '#9ca3af' : '#6b7280' }}>
-                    Track your reported issues
+                    {t('home.myIssuesDescription')}
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={isDark ? '#6b7280' : '#9ca3af'} />
@@ -162,7 +164,7 @@ export default function HomeScreen() {
               >
                 <Ionicons name="list" size={24} color="#ffffff" style={{ marginRight: 8 }} />
                 <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
-                  View All Issues
+                  {t('home.viewAllIssues')}
                 </Text>
               </TouchableOpacity>
 
@@ -182,10 +184,10 @@ export default function HomeScreen() {
                 <Ionicons name="add-circle" size={24} color={isDark ? '#60a5fa' : '#3b82f6'} style={{ marginRight: 12 }} />
                 <View style={{ flex: 1 }}>
                   <Text style={{ fontSize: 16, fontWeight: '600', color: isDark ? '#ffffff' : '#111827' }}>
-                    Report Issue
+                    {t('home.reportIssue')}
                   </Text>
                   <Text style={{ fontSize: 14, color: isDark ? '#9ca3af' : '#6b7280' }}>
-                    Manual entry for officers
+                    {t('home.reportIssueDescription')}
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={isDark ? '#6b7280' : '#9ca3af'} />
@@ -201,20 +203,20 @@ export default function HomeScreen() {
             marginBottom: 20,
           }}>
             <Text style={{ fontSize: 18, fontWeight: 'bold', color: isDark ? '#ffffff' : '#111827', marginBottom: 12 }}>
-              Quick Stats
+              {t('home.quickStats')}
             </Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={{ alignItems: 'center', flex: 1 }}>
                 <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#60a5fa' : '#3b82f6' }}>{quickStats.total}</Text>
-                <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>Total Issues</Text>
+                <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>{t('home.totalIssues')}</Text>
               </View>
               <View style={{ alignItems: 'center', flex: 1 }}>
                 <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#10b981' : '#059669' }}>{quickStats.byStatus['Resolved'] || 0}</Text>
-                <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>Resolved</Text>
+                <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>{t('home.resolved')}</Text>
               </View>
               <View style={{ alignItems: 'center', flex: 1 }}>
                 <Text style={{ fontSize: 24, fontWeight: 'bold', color: isDark ? '#f59e0b' : '#d97706' }}>{quickStats.byStatus['Pending'] || 0}</Text>
-                <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>Pending</Text>
+                <Text style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#6b7280' }}>{t('home.pending')}</Text>
               </View>
             </View>
           </View>
@@ -235,10 +237,10 @@ export default function HomeScreen() {
             <Ionicons name="map-outline" size={24} color={isDark ? '#60a5fa' : '#3b82f6'} style={{ marginRight: 12 }} />
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: 16, fontWeight: '600', color: isDark ? '#ffffff' : '#111827' }}>
-                View Issues on Map
+                {t('home.viewIssuesOnMap')}
               </Text>
               <Text style={{ fontSize: 14, color: isDark ? '#9ca3af' : '#6b7280' }}>
-                {isOfficer ? 'See all issues across your area' : 'See all reported issues in your area'}
+                {isOfficer ? t('home.officerViewIssuesOnMapDescription') : t('home.viewIssuesOnMapDescription')}
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={isDark ? '#6b7280' : '#9ca3af'} />
