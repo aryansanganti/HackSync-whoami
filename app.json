@@ -61,6 +61,13 @@
     "plugins": [
       "expo-router",
       [
+        "expo-notifications",
+        {
+          "color": "#3b82f6",
+          "mode": "production"
+        }
+      ],
+      [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow Civic AI to use your location to show your position on the map and report issues near you."
@@ -87,7 +94,9 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      ["expo-dev-client"] // Optional for native testing
+      [
+        "expo-dev-client"
+      ]
     ],
     "experiments": {
       "typedRoutes": true

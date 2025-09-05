@@ -1,8 +1,53 @@
 import * as FileSystem from 'expo-file-system';
 import { CivicIssue, IssueCategory, IssueInsert, IssueStatus, IssueUpdate } from '../types';
+import notificationService from './notificationService';
 import { supabase } from './supabase';
 
 export class SupabaseService {
+    // --- Enum mapping helpers ---
+    private static mapPriorityForDb(p?: 'Low' | 'Medium' | 'High'): 'low' | 'medium' | 'high' {
+        if (!p) return 'medium';
+        return p.toLowerCase() as 'low' | 'medium' | 'high';
+    }
+
+    private static mapStatusForDb(s?: IssueStatus): 'open' | 'in_progress' | 'resolved' {
+        switch (s) {
+            case 'In Progress':
+                return 'in_progress';
+            case 'Resolved':
+                return 'resolved';
+            case 'Pending':
+            default:
+                return 'open';
+        }
+    }
+
+    private static mapDbStatusToApp(db?: string): IssueStatus {
+        switch (db) {
+            case 'in_progress':
+                return 'In Progress';
+            case 'resolved':
+            case 'closed':
+                return 'Resolved';
+            case 'open':
+            case 'acknowledged':
+            case 'duplicate':
+            default:
+                return 'Pending';
+        }
+    }
+
+    private static mapDbPriorityToApp(db?: string): 'Low' | 'Medium' | 'High' {
+        switch ((db || '').toLowerCase()) {
+            case 'low':
+                return 'Low';
+            case 'high':
+                return 'High';
+            case 'medium':
+            default:
+                return 'Medium';
+        }
+    }
 
     // ISSUE MANAGEMENT
 
@@ -11,9 +56,23 @@ export class SupabaseService {
      */
     static async createIssue(issueData: IssueInsert): Promise<CivicIssue | null> {
         try {
+            // Map client values to DB format
+            const dbIssue: any = {
+                ...issueData,
+                // Map to DB enum values
+                priority: SupabaseService.mapPriorityForDb(issueData.priority),
+                status: SupabaseService.mapStatusForDb(issueData.status),
+                address: issueData.address || '',
+            };
+            // Also send lat/lng to leverage compatibility trigger
+            if (issueData.latitude && issueData.longitude) {
+                dbIssue.latitude = issueData.latitude;
+                dbIssue.longitude = issueData.longitude;
+            }
+
             const { data, error } = await supabase
                 .from('issues')
-                .insert([issueData])
+                .insert([dbIssue])
                 .select()
                 .single();
 
@@ -34,11 +93,18 @@ export class SupabaseService {
      */
     static async createAnonymousIssue(issueData: Omit<IssueInsert, 'reporter_id' | 'is_anonymous'>): Promise<CivicIssue | null> {
         try {
-            const anonymousIssueData = {
+            const anonymousIssueData: any = {
                 ...issueData,
                 reporter_id: null,
                 is_anonymous: true,
+                priority: SupabaseService.mapPriorityForDb(issueData.priority),
+                status: SupabaseService.mapStatusForDb(issueData.status),
+                address: issueData.address || '',
             };
+            if (issueData.latitude && issueData.longitude) {
+                anonymousIssueData.latitude = issueData.latitude;
+                anonymousIssueData.longitude = issueData.longitude;
+            }
 
             // Debug: Log the data being sent
             console.log('Anonymous issue data being sent:', JSON.stringify(anonymousIssueData, null, 2));
@@ -84,10 +150,10 @@ export class SupabaseService {
                 query = query.eq('category', filters.category);
             }
             if (filters?.priority) {
-                query = query.eq('priority', filters.priority);
+                query = query.eq('priority', SupabaseService.mapPriorityForDb(filters.priority));
             }
             if (filters?.status) {
-                query = query.eq('status', filters.status);
+                query = query.eq('status', SupabaseService.mapStatusForDb(filters.status));
             }
             if (filters?.limit) {
                 query = query.limit(filters.limit);
@@ -138,10 +204,12 @@ export class SupabaseService {
      */
     static async updateIssue(issueId: string, updates: IssueUpdate): Promise<CivicIssue | null> {
         try {
-            const updateData = {
+            const updateData: any = {
                 ...updates,
                 updated_at: new Date().toISOString(),
             };
+            if (updates.status) updateData.status = SupabaseService.mapStatusForDb(updates.status);
+            if (updates.priority) updateData.priority = SupabaseService.mapPriorityForDb(updates.priority);
 
             const { data, error } = await supabase
                 .from('issues')
@@ -153,6 +221,21 @@ export class SupabaseService {
             if (error) {
                 console.error('Error updating issue:', error);
                 throw error;
+            }
+
+            // Notify the reporter if status changed
+            if (updates.status && data?.reporter_id) {
+                const title = updates.status === 'Resolved' ? 'Issue Resolved' : 'Issue Update';
+                const body = updates.status === 'Resolved'
+                    ? 'Your issue has been resolved!'
+                    : `Status changed to ${updates.status}`;
+                await notificationService.sendPushNotification({
+                    type: updates.status === 'Resolved' ? 'issue_resolved' : 'issue_update',
+                    title,
+                    body,
+                    issueId,
+                    data: { issueId, status: updates.status }
+                }, data.reporter_id);
             }
 
             return data;
@@ -170,7 +253,7 @@ export class SupabaseService {
             const { error } = await supabase
                 .from('issues')
                 .update({
-                    status,
+                    status: SupabaseService.mapStatusForDb(status),
                     updated_at: new Date().toISOString()
                 })
                 .eq('id', issueId);
@@ -178,6 +261,24 @@ export class SupabaseService {
             if (error) {
                 console.error('Error updating issue status:', error);
                 throw error;
+            }
+            // Look up reporter and notify
+            const { data: issue } = await supabase
+                .from('issues')
+                .select('reporter_id')
+                .eq('id', issueId)
+                .single();
+
+            if (issue?.reporter_id) {
+                const title = status === 'Resolved' ? 'Issue Resolved' : 'Issue Update';
+                const body = status === 'Resolved' ? 'Your issue has been resolved!' : `Status changed to ${status}`;
+                await notificationService.sendPushNotification({
+                    type: status === 'Resolved' ? 'issue_resolved' : 'issue_update',
+                    title,
+                    body,
+                    issueId,
+                    data: { issueId, status }
+                }, issue.reporter_id);
             }
 
             return true;
@@ -363,6 +464,94 @@ export class SupabaseService {
         }
     }
 
+    // COMMUNITY IMAGE STORAGE
+
+    /**
+     * Upload a community image to Supabase Storage (community-images bucket)
+     * Path: {user_id}/{filename}
+     */
+    static async uploadCommunityImage(imageUri: string, fileName: string): Promise<string | null> {
+        const maxRetries = 3;
+        let lastError: any = null;
+
+        // Ensure we have a user id for pathing and RLS
+        const { data: auth } = await supabase.auth.getUser();
+        const userId = auth?.user?.id;
+        if (!userId) {
+            console.error('uploadCommunityImage: No authenticated user');
+            return null;
+        }
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                // Convert image URI to Blob using FileSystem
+                const info = await FileSystem.getInfoAsync(imageUri);
+                if (!info.exists) {
+                    throw new Error(`Image file not found at URI: ${imageUri}`);
+                }
+
+                // Read file as base64, then convert to Blob via data URL (avoids fetch(file://) issues)
+                const base64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+                const lower = (imageUri.split('?')[0] || '').toLowerCase();
+                const ext = lower.substring(lower.lastIndexOf('.') + 1);
+                const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : ext === 'heic' ? 'image/heic' : 'image/jpeg';
+                const dataUrl = `data:${mime};base64,${base64}`;
+                const dataResp = await fetch(dataUrl);
+                const blob = await dataResp.blob();
+
+                // Create file path
+                const filePath = `${userId}/${fileName}`;
+
+                // Upload to Supabase Storage
+                const { data, error } = await supabase.storage
+                    .from('community-images')
+                    .upload(filePath, blob, {
+                        contentType: blob.type || 'image/jpeg',
+                        upsert: false,
+                    });
+
+                if (error) {
+                    lastError = error;
+                    if (attempt === maxRetries) throw error;
+                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+                    continue;
+                }
+
+                // Get public URL
+                const { data: urlData } = supabase.storage
+                    .from('community-images')
+                    .getPublicUrl(filePath);
+
+                return urlData.publicUrl;
+            } catch (error) {
+                lastError = error;
+                if (attempt === maxRetries) break;
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+            }
+        }
+
+        console.error('All community image upload attempts failed:', lastError);
+        return null;
+    }
+
+    /**
+     * Upload multiple community images
+     */
+    static async uploadMultipleCommunityImages(imageUris: string[]): Promise<string[]> {
+        const uploadPromises = imageUris.map(async (uri, index) => {
+            const fileName = `post_${index + 1}_${Date.now()}.jpg`;
+            return this.uploadCommunityImage(uri, fileName);
+        });
+
+        try {
+            const results = await Promise.all(uploadPromises);
+            return results.filter((url): url is string => !!url);
+        } catch (error) {
+            console.error('Failed to upload multiple community images:', error);
+            return [];
+        }
+    }
+
     /**
      * Delete an image from storage
      */
@@ -431,9 +620,13 @@ export class SupabaseService {
             };
 
             data?.forEach(issue => {
-                byStatus[issue.status as IssueStatus]++;
-                byCategory[issue.category as IssueCategory]++;
-                byPriority[issue.priority]++;
+                const appStatus = SupabaseService.mapDbStatusToApp(issue.status);
+                const appPriority = SupabaseService.mapDbPriorityToApp(issue.priority);
+                byStatus[appStatus] = (byStatus[appStatus] ?? 0) + 1;
+                if ((issue.category as IssueCategory) in byCategory) {
+                    byCategory[issue.category as IssueCategory] = (byCategory[issue.category as IssueCategory] ?? 0) + 1;
+                }
+                byPriority[appPriority] = (byPriority[appPriority] ?? 0) + 1;
             });
 
             return { total, byStatus, byCategory, byPriority };
