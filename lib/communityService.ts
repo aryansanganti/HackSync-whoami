@@ -59,6 +59,24 @@ export interface VoteData {
 }
 
 class CommunityService {
+  private storagePrefix: string;
+
+  constructor() {
+    const base = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
+    this.storagePrefix = base
+      ? `${base.replace(/\/$/, '')}/storage/v1/object/public/community-images/`
+      : '';
+  }
+
+  private normalizeImageUrls(urls?: string[] | null): string[] | undefined {
+    if (!urls || urls.length === 0) return urls || undefined;
+    if (!this.storagePrefix) return urls; // Fallback: return as-is if env missing
+    return urls.map(u => {
+      if (!u) return u;
+      if (u.startsWith('http://') || u.startsWith('https://')) return u;
+      return `${this.storagePrefix}${u.replace(/^\//, '')}`;
+    });
+  }
   // Community Posts
   async getCommunityFeed(page = 0, limit = 20): Promise<CommunityPost[]> {
     try {
@@ -79,7 +97,7 @@ class CommunityService {
         (data || []).map(async (post: any) => {
           const userVote = await this.getUserVote('post', post.id);
           const vote_counts = { upvotes: post.upvotes ?? 0, downvotes: post.downvotes ?? 0 };
-          return { ...post, vote_counts, user_vote: userVote } as CommunityPost;
+          return { ...post, image_urls: this.normalizeImageUrls(post.image_urls), vote_counts, user_vote: userVote } as CommunityPost;
         })
       );
 
@@ -161,6 +179,7 @@ class CommunityService {
 
       return data.map((post) => ({
         ...post,
+        image_urls: this.normalizeImageUrls(post.image_urls),
         vote_counts: { upvotes: post.upvotes ?? 0, downvotes: post.downvotes ?? 0 },
       })) as CommunityPost[];
     } catch (error) {
@@ -218,6 +237,7 @@ class CommunityService {
 
       return data.map((c) => ({
         ...c,
+        image_urls: this.normalizeImageUrls(c.image_urls),
         vote_counts: { upvotes: c.upvotes ?? 0, downvotes: c.downvotes ?? 0 },
       })) as IssueComment[];
     } catch (error) {
