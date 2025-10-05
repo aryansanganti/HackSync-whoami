@@ -5,7 +5,8 @@ import SupabaseService from '@/lib/supabase-service';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Modal, Pressable, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Image, Modal, Pressable, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const EMOJIS = ['😀', '😁', '😂', '🤣', '😊', '😍', '🤩', '🤔', '👏', '👍', '🙏', '🔥', '🌟', '🚀', '✅', '❗'];
 
@@ -35,7 +36,7 @@ export default function CommunityScreen() {
   };
 
   const pickImages = async () => {
-    const res = await ImagePicker.launchImageLibraryAsync({ allowsMultipleSelection: true, mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 0.8 });
+    const res = await ImagePicker.launchImageLibraryAsync({ allowsMultipleSelection: true, mediaTypes: 'images', quality: 0.8 });
     if (!res.canceled) {
       const uris = (res.assets || []).map(a => a.uri).slice(0, 4);
       setImages(prev => [...prev, ...uris].slice(0, 4));
@@ -52,12 +53,39 @@ export default function CommunityScreen() {
       const uploadedUrls = images.length > 0
         ? await SupabaseService.uploadMultipleCommunityImages(images)
         : [];
+      
+      // Check if image upload failed but we still want to post text
+      if (images.length > 0 && uploadedUrls.length === 0) {
+        Alert.alert(
+          'Upload Failed', 
+          'Images could not be uploaded due to network issues. Would you like to post without images?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { 
+              text: 'Post Without Images', 
+              onPress: async () => {
+                const created = await CommunityService.createCommunityPost(composer.trim(), []);
+                if (created) {
+                  setComposer('');
+                  setImages([]);
+                  setPosts(prev => [created, ...prev]);
+                }
+              }
+            }
+          ]
+        );
+        return;
+      }
+      
       const created = await CommunityService.createCommunityPost(composer.trim(), uploadedUrls);
       if (created) {
         setComposer('');
         setImages([]);
         setPosts(prev => [created, ...prev]);
       }
+    } catch (error) {
+      console.error('Error creating post:', error);
+      Alert.alert('Error', 'Failed to create post. Please check your network connection and try again.');
     } finally {
       setSending(false);
     }

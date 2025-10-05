@@ -1,6 +1,6 @@
 import { useTheme } from '@/contexts/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
-import * as FileSystem from 'expo-file-system';
+import { File } from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
@@ -92,7 +92,7 @@ export default function ReportScreen() {
   const pickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: 'images',
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
@@ -152,8 +152,9 @@ export default function ReportScreen() {
     setLoadingMessage('🔍 Converting image for AI analysis...');
 
     try {
-      // Convert image to base64 using FileSystem (robust vs fetch(file://))
-      const base64Data = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+      // Convert image to base64 using new File API
+      const file = new File(imageUri);
+      const base64Data = await file.base64();
       if (!base64Data) throw new Error('Failed to read image as base64');
 
       setLoadingMessage('🤖 AI is analyzing your civic issue...');

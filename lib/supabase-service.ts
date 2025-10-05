@@ -1,4 +1,4 @@
-import * as FileSystem from 'expo-file-system';
+import { File } from 'expo-file-system';
 import { CivicIssue, IssueCategory, IssueInsert, IssueStatus, IssueUpdate } from '../types';
 import notificationService from './notificationService';
 import { supabase } from './supabase';
@@ -373,14 +373,14 @@ export class SupabaseService {
             try {
                 console.log(`Uploading image attempt ${attempt}/${maxRetries}:`, fileName);
 
-                // Convert image URI to Blob using FileSystem (robust across platforms)
-                const info = await FileSystem.getInfoAsync(imageUri);
-                if (!info.exists) {
+                // Convert image URI to Blob using new File API (robust across platforms)
+                const file = new File(imageUri);
+                if (!file.exists) {
                     throw new Error(`Image file not found at URI: ${imageUri}`);
                 }
 
                 // Read file as base64, then convert to Blob via data URL (avoids fetch(file://) issues)
-                const base64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+                const base64 = await file.base64();
                 // Best-effort MIME detection
                 const lower = (imageUri.split('?')[0] || '').toLowerCase();
                 const ext = lower.substring(lower.lastIndexOf('.') + 1);
@@ -484,49 +484,105 @@ export class SupabaseService {
 
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
-                // Convert image URI to Blob using FileSystem
-                const info = await FileSystem.getInfoAsync(imageUri);
-                if (!info.exists) {
+                console.log(`Community image upload attempt ${attempt}/${maxRetries}:`, fileName);
+
+                // Convert image URI to Blob using new File API with timeout
+                const file = new File(imageUri);
+                if (!file.exists) {
                     throw new Error(`Image file not found at URI: ${imageUri}`);
                 }
 
                 // Read file as base64, then convert to Blob via data URL (avoids fetch(file://) issues)
-                const base64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+                const base64 = await file.base64();
                 const lower = (imageUri.split('?')[0] || '').toLowerCase();
                 const ext = lower.substring(lower.lastIndexOf('.') + 1);
                 const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : ext === 'heic' ? 'image/heic' : 'image/jpeg';
                 const dataUrl = `data:${mime};base64,${base64}`;
-                const dataResp = await fetch(dataUrl);
-                const blob = await dataResp.blob();
+                
+                // Add timeout to fetch operation
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                
+                try {
+                    const dataResp = await fetch(dataUrl, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    const blob = await dataResp.blob();
+                    console.log(`Community image blob created successfully, size: ${blob.size} bytes, type: ${blob.type}`);
 
-                // Create file path
-                const filePath = `${userId}/${fileName}`;
+                    // Create file path
+                    const filePath = `${userId}/${fileName}`;
 
-                // Upload to Supabase Storage
-                const { data, error } = await supabase.storage
-                    .from('community-images')
-                    .upload(filePath, blob, {
-                        contentType: blob.type || 'image/jpeg',
-                        upsert: false,
-                    });
+                    // Upload to Supabase Storage with timeout handling
+                    const uploadController = new AbortController();
+                    const uploadTimeoutId = setTimeout(() => uploadController.abort(), 60000); // 60 second timeout
 
-                if (error) {
-                    lastError = error;
-                    if (attempt === maxRetries) throw error;
-                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
-                    continue;
+                    const { data, error } = await supabase.storage
+                        .from('community-images')
+                        .upload(filePath, blob, {
+                            contentType: blob.type || 'image/jpeg',
+                            upsert: false,
+                        });
+
+                    clearTimeout(uploadTimeoutId);
+
+                    if (error) {
+                        console.error(`Community image upload attempt ${attempt} failed:`, error);
+                        lastError = error;
+                        
+                        // Check if it's a bucket or permission error
+                        if (error.message?.includes('bucket') || error.message?.includes('not found')) {
+                            console.error('Storage bucket "community-images" may not exist or have incorrect policies');
+                            // Try fallback to issue-images bucket
+                            console.log('Attempting fallback to issue-images bucket...');
+                            const fallbackPath = `community/${userId}/${fileName}`;
+                            const { data: fallbackData, error: fallbackError } = await supabase.storage
+                                .from('issue-images')
+                                .upload(fallbackPath, blob, {
+                                    contentType: blob.type || 'image/jpeg',
+                                    upsert: false,
+                                });
+
+                            if (!fallbackError && fallbackData) {
+                                console.log('Fallback upload successful:', fallbackData);
+                                const { data: urlData } = supabase.storage
+                                    .from('issue-images')
+                                    .getPublicUrl(fallbackPath);
+                                return urlData.publicUrl;
+                            }
+                        }
+
+                        if (attempt === maxRetries) throw error;
+                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+                        continue;
+                    }
+
+                    console.log('Community image uploaded successfully:', data);
+
+                    // Get public URL
+                    const { data: urlData } = supabase.storage
+                        .from('community-images')
+                        .getPublicUrl(filePath);
+
+                    console.log('Community image public URL generated:', urlData.publicUrl);
+                    return urlData.publicUrl;
+
+                } catch (fetchError: any) {
+                    clearTimeout(timeoutId);
+                    if (fetchError.name === 'AbortError') {
+                        throw new Error('Network request timed out');
+                    }
+                    throw fetchError;
                 }
 
-                // Get public URL
-                const { data: urlData } = supabase.storage
-                    .from('community-images')
-                    .getPublicUrl(filePath);
-
-                return urlData.publicUrl;
             } catch (error) {
+                console.error(`Community image upload attempt ${attempt} failed:`, error);
                 lastError = error;
+                
                 if (attempt === maxRetries) break;
-                await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+                
+                // Progressive backoff with jitter
+                const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+                await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
 

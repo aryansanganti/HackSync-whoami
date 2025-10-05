@@ -38,11 +38,17 @@ const getStatusColor = (status: IssueStatus, isDark: boolean): string => {
     'In Progress': { dark: '#3b82f6', light: '#3b82f6' },
     'Resolved': { dark: '#10b981', light: '#059669' },
   };
+  
+  // Safety check for undefined/null status
+  if (!status || !colors[status]) {
+    return isDark ? colors['Pending'].dark : colors['Pending'].light;
+  }
+  
   return isDark ? colors[status].dark : colors[status].light;
 };
 
-const getCategoryIcon = (category: IssueCategory): string => {
-  const icons: Record<IssueCategory, string> = {
+const getCategoryIcon = (category: IssueCategory): keyof typeof Ionicons.glyphMap => {
+  const icons: Record<IssueCategory, keyof typeof Ionicons.glyphMap> = {
     'Roads': 'car',
     'Sanitation': 'trash',
     'Electricity': 'flash',
@@ -50,6 +56,12 @@ const getCategoryIcon = (category: IssueCategory): string => {
     'Public Safety': 'shield',
     'Others': 'help-circle',
   };
+  
+  // Safety check for undefined/null category
+  if (!category || !icons[category]) {
+    return 'help-circle';
+  }
+  
   return icons[category];
 };
 
@@ -195,8 +207,8 @@ export default function MapScreen() {
   }, [filteredIssues, filters.showHeatmap]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#111827' : '#f9fafb' }}>
-      <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={{ flex: 1, backgroundColor: isDark ? '#111827' : '#f9fafb' }}>
         <MapView
           ref={mapRef}
           style={styles.map}
@@ -293,8 +305,8 @@ export default function MapScreen() {
             onClose={() => setIssueDetailModalVisible(false)}
             issue={selectedIssue}
             isDark={isDark}
-            getPriorityColor={getPriorityColor}
-            getStatusColor={getStatusColor}
+            getPriorityColor={(priority: string) => getPriorityColor(priority as Priority)}
+            getStatusColor={(status: IssueStatus) => getStatusColor(status, isDark)}
           />
         )}
 
@@ -315,12 +327,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    width,
-    height,
+    flex: 1,
   },
   controls: {
     position: 'absolute',
-    top: 100,
+    top: 60,
     right: 20,
     gap: 12,
   },

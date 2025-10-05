@@ -20,35 +20,87 @@ export default function AuthCallback() {
   const handleAuthCallback = async () => {
     try {
       setIsProcessing(true);
+      console.log('🔍 Auth callback started');
+      console.log('🔍 URL params:', params);
       
-      // Get the current URL to extract tokens
-      const url = window.location?.href || '';
+      // Check for error in URL params first
+      if (params.error) {
+        console.error('🔍 OAuth error in params:', params.error);
+        setError(`Authentication failed: ${params.error_description || params.error}`);
+        return;
+      }
+
+      // For mobile platforms, check URL params for tokens
+      if (params.access_token || params.code) {
+        console.log('🔍 Found auth tokens in params');
+        
+        // If we have an access_token directly, use it
+        if (params.access_token && params.refresh_token) {
+          console.log('🔍 Setting session with tokens from params');
+          const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+            access_token: params.access_token as string,
+            refresh_token: params.refresh_token as string,
+          });
+
+          if (!sessionError && sessionData.session) {
+            console.log('🔍 Session set successfully from params');
+            router.replace('/(tabs)');
+            return;
+          } else {
+            console.error('🔍 Error setting session from params:', sessionError);
+            setError('Failed to complete authentication. Please try again.');
+            return;
+          }
+        }
+      }
+
+      // For web platforms or when we need to get session from Supabase
+      let url = '';
+      if (typeof window !== 'undefined') {
+        url = window.location?.href || '';
+        console.log('🔍 Web platform, checking URL:', url);
+      }
       
       if (url.includes('access_token') || url.includes('error')) {
-        // Handle the OAuth callback
+        console.log('🔍 Found auth tokens in URL');
+        // Handle the OAuth callback for web
         const { data, error: authError } = await supabase.auth.getSession();
         
         if (authError) {
-          console.error('Auth callback error:', authError);
+          console.error('🔍 Auth callback error:', authError);
           setError('Authentication failed. Please try again.');
           return;
         }
 
         if (data.session) {
-          console.log('Auth callback successful, session found');
-          // Successfully authenticated, redirect to main app
+          console.log('🔍 Auth callback successful, session found');
           router.replace('/(tabs)');
+          return;
         } else {
-          console.log('No session found in auth callback');
+          console.log('🔍 No session found in auth callback');
           setError('Authentication incomplete. Please try signing in again.');
+          return;
         }
-      } else {
-        // No tokens found, redirect back to sign in
-        console.log('No auth tokens found, redirecting to sign in');
-        router.replace('/(auth)/sign-in');
       }
+
+      // Try to get existing session as fallback
+      console.log('🔍 Checking for existing session');
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (!sessionError && sessionData.session) {
+        console.log('🔍 Found existing session, redirecting to app');
+        router.replace('/(tabs)');
+        return;
+      }
+
+      // No tokens found anywhere, redirect back to sign in
+      console.log('🔍 No auth tokens found, redirecting to sign in');
+      setTimeout(() => {
+        router.replace('/(auth)/sign-in');
+      }, 1000);
+      
     } catch (err) {
-      console.error('Error in auth callback:', err);
+      console.error('🔍 Error in auth callback:', err);
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsProcessing(false);
