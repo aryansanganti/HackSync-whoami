@@ -2,7 +2,6 @@
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 import { initI18n } from '@/lib/i18n';
-import notificationService from '@/lib/notificationService';
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
@@ -22,8 +21,6 @@ function RootLayoutContent() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('Auth state changed:', event, session?.user?.email);
       if (session) {
-        // Initialize push notifications when a session is active
-        notificationService.initialize().catch((e) => console.warn('Notification init failed:', e));
         // Persisted or new session: go to main app
         router.replace('/(tabs)');
       } else {
@@ -125,8 +122,6 @@ function RootLayoutContent() {
     return () => {
       linkingSubscription?.remove();
       subscription.unsubscribe();
-      // Clean up notification listeners
-      notificationService.cleanup();
     };
   }, []);
 

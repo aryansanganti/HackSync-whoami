@@ -237,7 +237,7 @@ export default function MapScreen() {
           )}
 
           {/* Issue Markers */}
-          {filteredIssues.map((issue) => (
+          {!filters.showHeatmap && filteredIssues.map((issue) => (
             <Marker
               key={issue.id}
               coordinate={{

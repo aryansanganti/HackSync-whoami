@@ -153,7 +153,12 @@ export function IssueFiltersModal({ visible, onClose, filters, setFilters, isDar
                     {/* Clear Filters */}
                     <TouchableOpacity
                         style={[styles.clearFiltersButton, { backgroundColor: isDark ? '#ef4444' : '#dc2626' }]}
-                        onPress={() => setFilters({ showHeatmap: false })}
+                        onPress={() => setFilters({ 
+                            category: undefined, 
+                            priority: undefined, 
+                            status: undefined, 
+                            showHeatmap: false 
+                        })}
                     >
                         <Text style={styles.clearFiltersText}>Clear All Filters</Text>
                     </TouchableOpacity>

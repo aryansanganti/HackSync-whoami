@@ -1,6 +1,4 @@
-import NotificationPreferences from '@/components/NotificationPreferences';
 import { useTheme } from '@/contexts/ThemeContext';
-import notificationService from '@/lib/notificationService';
 import { RoleManager, UserRole } from '@/lib/roleManager';
 import { Session, supabase } from '@/lib/supabase';
 import { Ionicons } from '@expo/vector-icons';
@@ -90,10 +88,7 @@ export default function ProfileScreen() {
       onPress: async () => {
         const newVal = !notificationsEnabled;
         setNotificationsEnabled(newVal);
-        if (newVal) {
-          const ok = await notificationService.initialize();
-          if (!ok) setNotificationsEnabled(false);
-        }
+        // Notification service integration removed
       },
       showSwitch: true,
       switchValue: notificationsEnabled,
@@ -300,9 +295,6 @@ export default function ProfileScreen() {
           }}>
             <LanguageSelector />
           </View>
-
-          {/* Notification Preferences */}
-          <NotificationPreferences />
 
           {/* Menu Items */}
           <View style={{

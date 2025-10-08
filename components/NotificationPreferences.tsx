@@ -1,29 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Switch, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, Switch, StyleSheet, Alert } from 'react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import notificationService from '@/lib/notificationService';
-
-interface NotificationPreferences {
-  issue_updates: boolean;
-  issue_resolved: boolean;
-  comment_replies: boolean;
-  upvotes: boolean;
-  community_posts: boolean;
-  general: boolean;
-}
 
 export default function NotificationPreferences() {
   const { isDark } = useTheme();
   const { t } = useTranslation();
-  const [preferences, setPreferences] = useState<NotificationPreferences>({
-    issue_updates: true,
-    issue_resolved: true,
-    comment_replies: true,
-    upvotes: true,
-    community_posts: true,
-    general: true,
-  });
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,10 +15,8 @@ export default function NotificationPreferences() {
 
   const loadPreferences = async () => {
     try {
-      const prefs = await notificationService.getNotificationPreferences();
-      if (prefs) {
-        setPreferences(prefs);
-      }
+      // Notification service integration removed - using default preferences
+      console.log('Loading default notification preferences');
     } catch (error) {
       console.error('Error loading notification preferences:', error);
     } finally {
@@ -43,20 +24,15 @@ export default function NotificationPreferences() {
     }
   };
 
-  const updatePreference = async (key: keyof NotificationPreferences, value: boolean) => {
+  const updatePreference = async (value: boolean) => {
     try {
-      const newPreferences = { ...preferences, [key]: value };
-      setPreferences(newPreferences);
+      setNotificationsEnabled(value);
       
-      const success = await notificationService.updateNotificationPreferences(newPreferences);
-      if (!success) {
-        // Revert on failure
-        setPreferences(preferences);
-        Alert.alert(t('common.error'), 'Failed to update notification preferences');
-      }
+      // Notification service integration removed - preferences only stored locally
+      console.log('Notification preference updated locally:', value);
     } catch (error) {
       console.error('Error updating notification preferences:', error);
-      setPreferences(preferences);
+      setNotificationsEnabled(notificationsEnabled);
       Alert.alert(t('common.error'), 'Failed to update notification preferences');
     }
   };
@@ -79,11 +55,6 @@ export default function NotificationPreferences() {
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingVertical: 12,
-      borderBottomWidth: 1,
-      borderBottomColor: isDark ? '#374151' : '#e5e7eb',
-    },
-    lastItem: {
-      borderBottomWidth: 0,
     },
     preferenceText: {
       flex: 1,
@@ -111,64 +82,25 @@ export default function NotificationPreferences() {
     );
   }
 
-  const preferenceItems = [
-    {
-      key: 'issue_updates' as keyof NotificationPreferences,
-      title: t('notifications.issueUpdates'),
-      description: t('notifications.issueUpdatesDesc'),
-    },
-    {
-      key: 'issue_resolved' as keyof NotificationPreferences,
-      title: t('notifications.issueResolved'),
-      description: t('notifications.issueResolvedDesc'),
-    },
-    {
-      key: 'comment_replies' as keyof NotificationPreferences,
-      title: t('notifications.commentReplies'),
-      description: t('notifications.commentRepliesDesc'),
-    },
-    {
-      key: 'upvotes' as keyof NotificationPreferences,
-      title: t('notifications.upvotes'),
-      description: t('notifications.upvotesDesc'),
-    },
-    {
-      key: 'community_posts' as keyof NotificationPreferences,
-      title: t('notifications.communityPosts'),
-      description: t('notifications.communityPostsDesc'),
-    },
-    {
-      key: 'general' as keyof NotificationPreferences,
-      title: t('notifications.general'),
-      description: t('notifications.generalDesc'),
-    },
-  ];
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t('profile.notifications')}</Text>
       
-      {preferenceItems.map((item, index) => (
-        <View
-          key={item.key}
-          style={[
-            styles.preferenceItem,
-            index === preferenceItems.length - 1 && styles.lastItem,
-          ]}
-        >
-          <View style={{ flex: 1 }}>
-            <Text style={styles.preferenceText}>{item.title}</Text>
-            <Text style={styles.preferenceDescription}>{item.description}</Text>
-          </View>
-          <Switch
-            style={styles.switch}
-            value={preferences[item.key]}
-            onValueChange={(value) => updatePreference(item.key, value)}
-            trackColor={{ false: isDark ? '#374151' : '#e5e7eb', true: isDark ? '#3b82f6' : '#3b82f6' }}
-            thumbColor={preferences[item.key] ? '#ffffff' : '#ffffff'}
-          />
+      <View style={styles.preferenceItem}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.preferenceText}>Enable Notifications</Text>
+          <Text style={styles.preferenceDescription}>
+            Receive notifications for all app activities
+          </Text>
         </View>
-      ))}
+        <Switch
+          style={styles.switch}
+          value={notificationsEnabled}
+          onValueChange={updatePreference}
+          trackColor={{ false: isDark ? '#374151' : '#e5e7eb', true: isDark ? '#3b82f6' : '#3b82f6' }}
+          thumbColor={notificationsEnabled ? '#ffffff' : '#ffffff'}
+        />
+      </View>
     </View>
   );
 }

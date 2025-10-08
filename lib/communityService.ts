@@ -1,4 +1,3 @@
-import notificationService from './notificationService';
 import { supabase } from './supabase';
 
 export interface CommunityPost {
@@ -588,12 +587,8 @@ class CommunityService {
           .single();
 
         if (userData) {
-          await notificationService.sendPushNotification({
-            type: 'comment_reply',
-            title: 'You were mentioned',
-            body: `Someone mentioned you in a ${type}`,
-            data: { targetId, type }
-          }, userData.user_id);
+          // Notification service integration removed
+          console.log(`User ${userData.user_id} mentioned in ${type} ${targetId}`);
         }
       }
     } catch (error) {
@@ -613,12 +608,8 @@ class CommunityService {
         .single();
 
       if (issueData) {
-        await notificationService.sendPushNotification({
-          type: 'issue_update',
-          title: 'Issue Update',
-          body: message,
-          issueId
-        }, issueData.reported_by);
+        // Notification service integration removed
+        console.log(`Issue owner ${issueData.reported_by} notified about issue ${issueId}: ${message}`);
       }
     } catch (error) {
       console.error('Error notifying issue owner:', error);
@@ -646,12 +637,8 @@ class CommunityService {
       }
 
       if (targetUserId) {
-        await notificationService.sendPushNotification({
-          type: 'upvote',
-          title: 'New Upvote',
-          body: 'Someone upvoted your content',
-          data: voteData
-        }, targetUserId);
+        // Notification service integration removed
+        console.log(`User ${targetUserId} notified about vote on ${voteData.target_type} ${voteData.target_id}`);
       }
     } catch (error) {
       console.error('Error notifying vote:', error);

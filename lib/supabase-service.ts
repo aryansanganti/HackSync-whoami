@@ -1,6 +1,5 @@
 import { File } from 'expo-file-system';
 import { CivicIssue, IssueCategory, IssueInsert, IssueStatus, IssueUpdate } from '../types';
-import notificationService from './notificationService';
 import { supabase } from './supabase';
 
 export class SupabaseService {
@@ -225,17 +224,8 @@ export class SupabaseService {
 
             // Notify the reporter if status changed
             if (updates.status && data?.reporter_id) {
-                const title = updates.status === 'Resolved' ? 'Issue Resolved' : 'Issue Update';
-                const body = updates.status === 'Resolved'
-                    ? 'Your issue has been resolved!'
-                    : `Status changed to ${updates.status}`;
-                await notificationService.sendPushNotification({
-                    type: updates.status === 'Resolved' ? 'issue_resolved' : 'issue_update',
-                    title,
-                    body,
-                    issueId,
-                    data: { issueId, status: updates.status }
-                }, data.reporter_id);
+                // Notification service integration removed
+                console.log(`Issue ${issueId} status changed to ${updates.status} for reporter ${data.reporter_id}`);
             }
 
             return data;
@@ -270,15 +260,8 @@ export class SupabaseService {
                 .single();
 
             if (issue?.reporter_id) {
-                const title = status === 'Resolved' ? 'Issue Resolved' : 'Issue Update';
-                const body = status === 'Resolved' ? 'Your issue has been resolved!' : `Status changed to ${status}`;
-                await notificationService.sendPushNotification({
-                    type: status === 'Resolved' ? 'issue_resolved' : 'issue_update',
-                    title,
-                    body,
-                    issueId,
-                    data: { issueId, status }
-                }, issue.reporter_id);
+                // Notification service integration removed
+                console.log(`Issue ${issueId} status changed to ${status} for reporter ${issue.reporter_id}`);
             }
 
             return true;
