@@ -317,10 +317,10 @@ export class SupabaseService {
                 query = query.eq('category', filters.category);
             }
             if (filters?.priority) {
-                query = query.eq('priority', filters.priority);
+                query = query.eq('priority', SupabaseService.mapPriorityForDb(filters.priority));
             }
             if (filters?.status) {
-                query = query.eq('status', filters.status);
+                query = query.eq('status', SupabaseService.mapStatusForDb(filters.status));
             }
             if (filters?.limit) {
                 query = query.limit(filters.limit);
