@@ -77,13 +77,13 @@ export class SupabaseService {
                 .single();
 
             if (error) {
-                console.error('Error creating issue:', error);
+                console.log('Error creating issue:', error);
                 throw error;
             }
 
             return data;
         } catch (error) {
-            console.error('Failed to create issue:', error);
+            console.log('Failed to create issue:', error);
             return null;
         }
     }
@@ -118,13 +118,13 @@ export class SupabaseService {
                 .single();
 
             if (error) {
-                console.error('Error creating anonymous issue:', error);
+                console.log('Error creating anonymous issue:', error);
                 throw error;
             }
 
             return data;
         } catch (error) {
-            console.error('Failed to create anonymous issue:', error);
+            console.log('Failed to create anonymous issue:', error);
             return null;
         }
     }
@@ -165,13 +165,13 @@ export class SupabaseService {
             const { data, error } = await query;
 
             if (error) {
-                console.error('Error fetching issues:', error);
+                console.log('Error fetching issues:', error);
                 throw error;
             }
 
             return data || [];
         } catch (error) {
-            console.error('Failed to fetch issues:', error);
+            console.log('Failed to fetch issues:', error);
             return [];
         }
     }
@@ -188,13 +188,13 @@ export class SupabaseService {
                 .single();
 
             if (error) {
-                console.error('Error fetching issue:', error);
+                console.log('Error fetching issue:', error);
                 throw error;
             }
 
             return data;
         } catch (error) {
-            console.error('Failed to fetch issue:', error);
+            console.log('Failed to fetch issue:', error);
             return null;
         }
     }
@@ -219,7 +219,7 @@ export class SupabaseService {
                 .single();
 
             if (error) {
-                console.error('Error updating issue:', error);
+                console.log('Error updating issue:', error);
                 throw error;
             }
 
@@ -240,7 +240,7 @@ export class SupabaseService {
 
             return data;
         } catch (error) {
-            console.error('Failed to update issue:', error);
+            console.log('Failed to update issue:', error);
             return null;
         }
     }
@@ -259,7 +259,7 @@ export class SupabaseService {
                 .eq('id', issueId);
 
             if (error) {
-                console.error('Error updating issue status:', error);
+                console.log('Error updating issue status:', error);
                 throw error;
             }
             // Look up reporter and notify
@@ -283,7 +283,7 @@ export class SupabaseService {
 
             return true;
         } catch (error) {
-            console.error('Failed to update issue status:', error);
+            console.log('Failed to update issue status:', error);
             return false;
         }
     }
@@ -302,13 +302,13 @@ export class SupabaseService {
                 .order('created_at', { ascending: false });
 
             if (error) {
-                console.error('Error fetching user issues:', error);
+                console.log('Error fetching user issues:', error);
                 throw error;
             }
 
             return data || [];
         } catch (error) {
-            console.error('Failed to fetch user issues:', error);
+            console.log('Failed to fetch user issues:', error);
             return [];
         }
     }
@@ -349,13 +349,13 @@ export class SupabaseService {
             const { data, error } = await query;
 
             if (error) {
-                console.error('Error fetching public issues:', error);
+                console.log('Error fetching public issues:', error);
                 throw error;
             }
 
             return data || [];
         } catch (error) {
-            console.error('Failed to fetch public issues:', error);
+            console.log('Failed to fetch public issues:', error);
             return [];
         }
     }
@@ -402,7 +402,7 @@ export class SupabaseService {
                     });
 
                 if (error) {
-                    console.error(`Upload attempt ${attempt} failed:`, error);
+                    console.log(`Upload attempt ${attempt} failed:`, error);
                     lastError = error;
 
                     // If it's the last attempt, throw the error
@@ -426,7 +426,7 @@ export class SupabaseService {
                 return urlData.publicUrl;
 
             } catch (error) {
-                console.error(`Upload attempt ${attempt} failed:`, error);
+                console.log(`Upload attempt ${attempt} failed:`, error);
                 lastError = error;
 
                 // If it's the last attempt, break the loop
@@ -439,7 +439,7 @@ export class SupabaseService {
             }
         }
 
-        console.error('All upload attempts failed:', lastError);
+        console.log('All upload attempts failed:', lastError);
         return null;
     }
 
@@ -459,7 +459,7 @@ export class SupabaseService {
             const results = await Promise.all(uploadPromises);
             return results.filter(url => url !== null) as string[];
         } catch (error) {
-            console.error('Failed to upload multiple images:', error);
+            console.log('Failed to upload multiple images:', error);
             return [];
         }
     }
@@ -478,7 +478,7 @@ export class SupabaseService {
         const { data: auth } = await supabase.auth.getUser();
         const userId = auth?.user?.id;
         if (!userId) {
-            console.error('uploadCommunityImage: No authenticated user');
+            console.log('uploadCommunityImage: No authenticated user');
             return null;
         }
 
@@ -526,12 +526,12 @@ export class SupabaseService {
                     clearTimeout(uploadTimeoutId);
 
                     if (error) {
-                        console.error(`Community image upload attempt ${attempt} failed:`, error);
+                        console.log(`Community image upload attempt ${attempt} failed:`, error);
                         lastError = error;
                         
                         // Check if it's a bucket or permission error
                         if (error.message?.includes('bucket') || error.message?.includes('not found')) {
-                            console.error('Storage bucket "community-images" may not exist or have incorrect policies');
+                            console.log('Storage bucket "community-images" may not exist or have incorrect policies');
                             // Try fallback to issue-images bucket
                             console.log('Attempting fallback to issue-images bucket...');
                             const fallbackPath = `community/${userId}/${fileName}`;
@@ -575,7 +575,7 @@ export class SupabaseService {
                 }
 
             } catch (error) {
-                console.error(`Community image upload attempt ${attempt} failed:`, error);
+                console.log(`Community image upload attempt ${attempt} failed:`, error);
                 lastError = error;
                 
                 if (attempt === maxRetries) break;
@@ -586,7 +586,7 @@ export class SupabaseService {
             }
         }
 
-        console.error('All community image upload attempts failed:', lastError);
+        console.log('All community image upload attempts failed:', lastError);
         return null;
     }
 
@@ -603,7 +603,7 @@ export class SupabaseService {
             const results = await Promise.all(uploadPromises);
             return results.filter((url): url is string => !!url);
         } catch (error) {
-            console.error('Failed to upload multiple community images:', error);
+            console.log('Failed to upload multiple community images:', error);
             return [];
         }
     }
@@ -623,13 +623,13 @@ export class SupabaseService {
                 .remove([filePath]);
 
             if (error) {
-                console.error('Error deleting image:', error);
+                console.log('Error deleting image:', error);
                 throw error;
             }
 
             return true;
         } catch (error) {
-            console.error('Failed to delete image:', error);
+            console.log('Failed to delete image:', error);
             return false;
         }
     }
@@ -651,7 +651,7 @@ export class SupabaseService {
                 .select('status, category, priority');
 
             if (error) {
-                console.error('Error fetching issue stats:', error);
+                console.log('Error fetching issue stats:', error);
                 throw error;
             }
 
@@ -687,7 +687,7 @@ export class SupabaseService {
 
             return { total, byStatus, byCategory, byPriority };
         } catch (error) {
-            console.error('Failed to fetch issue stats:', error);
+            console.log('Failed to fetch issue stats:', error);
             return {
                 total: 0,
                 byStatus: { 'Pending': 0, 'In Progress': 0, 'Resolved': 0 },

@@ -118,6 +118,9 @@ class CommunityService {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
+      // Ensure user profile exists
+      await this.ensureUserProfile(user.id);
+
       const hashtags = this.extractHashtags(content);
       const mentions = this.extractMentions(content);
 
@@ -254,6 +257,9 @@ class CommunityService {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
+
+      // Ensure user profile exists
+      await this.ensureUserProfile(user.id);
 
       const mentions = this.extractMentions(content);
 
@@ -426,6 +432,82 @@ class CommunityService {
   }
 
   // Helper Methods
+  private async ensureUserProfile(userId: string): Promise<void> {
+    try {
+      console.log('Checking user profile for userId:', userId);
+
+      // Check if user profile exists
+      const { data: existingProfile, error: selectError } = await supabase
+        .from('user_profiles')
+        .select('user_id')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (selectError) {
+        console.error('Error checking existing profile:', selectError);
+        throw selectError;
+      }
+
+      if (!existingProfile) {
+        console.log('User profile not found, creating new profile...');
+
+        // Get user email from auth for display name fallback
+        const { data: authUser } = await supabase.auth.getUser();
+        const displayName = authUser.user?.email?.split('@')[0] || `User_${userId.slice(0, 8)}`;
+
+        console.log('Creating profile with display name:', displayName);
+
+        // Create basic user profile with only essential fields
+        const { data: newProfile, error: insertError } = await supabase
+          .from('user_profiles')
+          .insert({
+            user_id: userId,
+            display_name: displayName
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          console.log('Error creating user profile:', insertError);
+
+          // If the insert still fails, try with minimal data
+          console.log('Trying to create profile with minimal data...');
+          const { error: minimalError } = await supabase
+            .from('user_profiles')
+            .insert({
+              user_id: userId
+            });
+
+          if (minimalError) {
+            console.error('Failed to create even minimal profile:', minimalError);
+            throw minimalError;
+          }
+
+          console.log('Minimal profile created successfully');
+        } else {
+          console.log('User profile created successfully:', newProfile);
+        }
+      } else {
+        console.log('User profile already exists');
+      }
+    } catch (error) {
+      console.error('Error in ensureUserProfile:', error);
+
+      // Final check to see if profile exists now
+      const { data: finalCheck, error: finalError } = await supabase
+        .from('user_profiles')
+        .select('user_id')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (finalError || !finalCheck) {
+        // If we still can't create/find the profile, let's proceed without it
+        // This allows the post creation to continue even if profile creation fails
+        console.warn(`Could not create/verify user profile for user: ${userId}, proceeding anyway`);
+      }
+    }
+  }
+
   private extractHashtags(content: string): string[] {
     const hashtagRegex = /#[\w\u0590-\u05ff]+/g;
     return content.match(hashtagRegex)?.map(tag => tag.substring(1)) || [];
