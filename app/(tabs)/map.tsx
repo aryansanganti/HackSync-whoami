@@ -207,118 +207,118 @@ export default function MapScreen() {
   }, [filteredIssues, filters.showHeatmap]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <View style={styles.container}>
       <View style={{ flex: 1, backgroundColor: isDark ? '#111827' : '#f9fafb' }}>
-        <MapView
-          ref={mapRef}
-          style={styles.map}
-          region={region}
-          onRegionChangeComplete={handleRegionChange}
-          showsUserLocation={true}
-          showsMyLocationButton={false}
-          provider={PROVIDER_GOOGLE}
-          mapType={isDark ? 'satellite' : 'standard'}
-          loadingEnabled={true}
-          loadingIndicatorColor={isDark ? '#60a5fa' : '#3b82f6'}
-          loadingBackgroundColor={isDark ? '#1f2937' : '#ffffff'}
-        >
-          {/* Heatmap Layer */}
-          {filters.showHeatmap && heatmapData.length > 0 && (
-            <Heatmap
-              points={heatmapData}
-              radius={50}
-              opacity={0.7}
-              gradient={{
-                colors: ['#00ff00', '#ffff00', '#ff0000'],
-                startPoints: [0.2, 0.5, 1.0],
-                colorMapSize: 256
-              }}
-            />
-          )}
-
-          {/* Issue Markers */}
-          {!filters.showHeatmap && filteredIssues.map((issue) => (
-            <Marker
-              key={issue.id}
-              coordinate={{
-                latitude: issue.latitude,
-                longitude: issue.longitude,
-              }}
-              pinColor={getPriorityColor(issue.priority as Priority)}
-              onPress={() => openIssueDetail(issue)}
-            >
-              <Callout>
-                <View style={styles.callout}>
-                  <View style={styles.calloutHeader}>
-                    <Ionicons
-                      name={getCategoryIcon(issue.category)}
-                      size={16}
-                      color={getPriorityColor(issue.priority as Priority)}
-                    />
-                    <Text style={styles.calloutTitle}>{issue.title}</Text>
-                  </View>
-                  <Text style={styles.calloutDescription}>{issue.description}</Text>
-                  <View style={styles.calloutFooter}>
-                    <View style={[styles.calloutBadge, { backgroundColor: getPriorityColor(issue.priority as Priority) }]}>
-                      <Text style={styles.calloutBadgeText}>{issue.priority}</Text>
-                    </View>
-                    <View style={[styles.calloutBadge, { backgroundColor: getStatusColor(issue.status, isDark) }]}>
-                      <Text style={styles.calloutBadgeText}>{issue.status}</Text>
-                    </View>
-                  </View>
-                </View>
-              </Callout>
-            </Marker>
-          ))}
-        </MapView>
-
-        {/* Control Buttons */}
-        <View style={styles.controls}>
-          <TouchableOpacity
-            style={[styles.controlButton, { backgroundColor: isDark ? '#1f2937' : '#ffffff' }]}
-            onPress={centerOnUserLocation}
-          >
-            <Ionicons name="locate" size={24} color={isDark ? '#60a5fa' : '#3b82f6'} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.controlButton, { backgroundColor: isDark ? '#1f2937' : '#ffffff' }]}
-            onPress={() => setFilterModalVisible(true)}
-          >
-            <Ionicons name="filter" size={24} color={isDark ? '#60a5fa' : '#3b82f6'} />
-          </TouchableOpacity>
-        </View>
-
-        <MapLegend isDark={isDark} />
-
-        <IssueFiltersModal
-          visible={filterModalVisible}
-          onClose={() => setFilterModalVisible(false)}
-          filters={filters}
-          setFilters={setFilters}
-          isDark={isDark}
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        region={region}
+        onRegionChangeComplete={handleRegionChange}
+        showsUserLocation={true}
+        showsMyLocationButton={false}
+        provider={PROVIDER_GOOGLE}
+        mapType={isDark ? 'satellite' : 'standard'}
+        loadingEnabled={true}
+        loadingIndicatorColor={isDark ? '#60a5fa' : '#3b82f6'}
+        loadingBackgroundColor={isDark ? '#1f2937' : '#ffffff'}
+      >
+        {/* Heatmap Layer */}
+        {filters.showHeatmap && heatmapData.length > 0 && (
+        <Heatmap
+          points={heatmapData}
+          radius={50}
+          opacity={0.7}
+          gradient={{
+          colors: ['#00ff00', '#ffff00', '#ff0000'],
+          startPoints: [0.2, 0.5, 1.0],
+          colorMapSize: 256
+          }}
         />
-
-        {selectedIssue && (
-          <IssueDetailModal
-            visible={issueDetailModalVisible}
-            onClose={() => setIssueDetailModalVisible(false)}
-            issue={selectedIssue}
-            isDark={isDark}
-            getPriorityColor={(priority: string) => getPriorityColor(priority as Priority)}
-            getStatusColor={(status: IssueStatus) => getStatusColor(status, isDark)}
-          />
         )}
 
-        {locationLoading && (
-          <View style={[styles.loadingOverlay, { backgroundColor: isDark ? '#1f2937' : '#ffffff' }]}>
-            <Text style={[styles.loadingText, { color: isDark ? '#ffffff' : '#111827' }]}>
-              Loading map...
-            </Text>
+        {/* Issue Markers */}
+        {!filters.showHeatmap && filteredIssues.map((issue) => (
+        <Marker
+          key={issue.id}
+          coordinate={{
+          latitude: issue.latitude,
+          longitude: issue.longitude,
+          }}
+          pinColor={getPriorityColor(issue.priority as Priority)}
+          onPress={() => openIssueDetail(issue)}
+        >
+          <Callout>
+          <View style={styles.callout}>
+            <View style={styles.calloutHeader}>
+            <Ionicons
+              name={getCategoryIcon(issue.category)}
+              size={16}
+              color={getPriorityColor(issue.priority as Priority)}
+            />
+            <Text style={styles.calloutTitle}>{issue.title}</Text>
+            </View>
+            <Text style={styles.calloutDescription}>{issue.description}</Text>
+            <View style={styles.calloutFooter}>
+            <View style={[styles.calloutBadge, { backgroundColor: getPriorityColor(issue.priority as Priority) }]}>
+              <Text style={styles.calloutBadgeText}>{issue.priority}</Text>
+            </View>
+            <View style={[styles.calloutBadge, { backgroundColor: getStatusColor(issue.status, isDark) }]}>
+              <Text style={styles.calloutBadgeText}>{issue.status}</Text>
+            </View>
+            </View>
           </View>
-        )}
+          </Callout>
+        </Marker>
+        ))}
+      </MapView>
+
+      {/* Control Buttons */}
+      <View style={styles.controls}>
+        <TouchableOpacity
+        style={[styles.controlButton, { backgroundColor: isDark ? '#1f2937' : '#ffffff' }]}
+        onPress={centerOnUserLocation}
+        >
+        <Ionicons name="locate" size={24} color={isDark ? '#60a5fa' : '#3b82f6'} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+        style={[styles.controlButton, { backgroundColor: isDark ? '#1f2937' : '#ffffff' }]}
+        onPress={() => setFilterModalVisible(true)}
+        >
+        <Ionicons name="filter" size={24} color={isDark ? '#60a5fa' : '#3b82f6'} />
+        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+
+      <MapLegend isDark={isDark} />
+
+      <IssueFiltersModal
+        visible={filterModalVisible}
+        onClose={() => setFilterModalVisible(false)}
+        filters={filters}
+        setFilters={setFilters}
+        isDark={isDark}
+      />
+
+      {selectedIssue && (
+        <IssueDetailModal
+        visible={issueDetailModalVisible}
+        onClose={() => setIssueDetailModalVisible(false)}
+        issue={selectedIssue}
+        isDark={isDark}
+        getPriorityColor={(priority: string) => getPriorityColor(priority as Priority)}
+        getStatusColor={(status: IssueStatus) => getStatusColor(status, isDark)}
+        />
+      )}
+
+      {locationLoading && (
+        <View style={[styles.loadingOverlay, { backgroundColor: isDark ? '#1f2937' : '#ffffff' }]}>
+        <Text style={[styles.loadingText, { color: isDark ? '#ffffff' : '#111827' }]}>
+          Loading map...
+        </Text>
+        </View>
+      )}
+      </View>
+    </View>
   );
 }
 
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
   },
   controls: {
     position: 'absolute',
-    top: 60,
+    top: 40,
     right: 20,
     gap: 12,
   },
