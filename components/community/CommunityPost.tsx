@@ -225,7 +225,7 @@ export default function CommunityPost({
         <View style={styles.userInfo}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.displayName}>
-              {post.user_profile?.display_name || t('community.anonymous')}
+              {post.user_profile?.display_name || t('user')}
             </Text>
             {!!post.user_profile?.role && (
               <View style={styles.roleBadge}>
@@ -330,9 +330,6 @@ export default function CommunityPost({
             size={20}
             color={isDark ? '#9ca3af' : '#6b7280'}
           />
-          <Text style={styles.actionText}>
-            {t('community.share')}
-          </Text>
         </TouchableOpacity>
       </View>
     </View>
